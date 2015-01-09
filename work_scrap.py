@@ -3,8 +3,19 @@ import bs4
 import xlwt
 
 
+option_list = [
+    ['facebook apps', 1],
+    ['Top Free iOS Games (US)', 1],
+    ['Top Paid iOS Games (US)', 1],
+    ['Top Grossing iOS Games (US)', 1],
+    ['Top Free iPad Games (US)', 1],
+    ['Top Paid iPad Games (US)', 1],
+    ['Top Grossing iPad Games (US)', 1]
+]
+
+
 def scrap_data_page(arg_pageItems=None):
-    print "\n\n starting the work for part1 \n\n"
+    print "\n\n starting the work for part1 facebook apps \n\n"
     # to get the top apps from page
     if arg_pageItems:
         response = requests.get(
@@ -94,7 +105,7 @@ def scrap_data_page(arg_pageItems=None):
 
 
 def scrap_data_page_part2(url, arg_pageItems=None):
-    print "\n\n starting the work for part2 \n\n"
+    print "\n\n starting the work for part2 iOS Apps\n\n"
 
     if arg_pageItems:
         part2_url = url + arg_pageItems
@@ -144,7 +155,7 @@ def scrap_data_page_part2(url, arg_pageItems=None):
 
     return main_data_set
 
-#========================
+# ========================
 # writing in xls file
 #========================
 
@@ -189,6 +200,7 @@ main_data_part2_6 = scrap_data_page_part2(url=url_list[5])
 
 print "\nwriting data to xls file path: ", filepath
 
+
 # writing data in sheet 1
 book = xlwt.Workbook(encoding="utf-8")
 sheet1 = book.add_sheet("Part 1 game data")
@@ -227,7 +239,6 @@ sheet7 = book.add_sheet("Top Grossing iPad Games (US)")
 for i, l in enumerate(main_data_part2_6):
     for j, col in enumerate(l):
         sheet7.write(i, j, col)
-
 
 print "\nwriting done"
 
