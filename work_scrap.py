@@ -1,17 +1,7 @@
+import smtplib
 import requests
 import bs4
 import xlwt
-
-
-option_list = [
-    ['facebook apps', 1],
-    ['Top Free iOS Games (US)', 1],
-    ['Top Paid iOS Games (US)', 1],
-    ['Top Grossing iOS Games (US)', 1],
-    ['Top Free iPad Games (US)', 1],
-    ['Top Paid iPad Games (US)', 1],
-    ['Top Grossing iPad Games (US)', 1]
-]
 
 
 def scrap_data_page(arg_pageItems=None):
@@ -161,17 +151,8 @@ def scrap_data_page_part2(url, arg_pageItems=None):
 
 filepath = '/home/stonex/game_data2.xls'
 
-#  Call following fucntion with pageItems you want to scrap on main page.
 
-option_list = [
-    ['facebook apps', 1],
-    ['Top Free iOS Games (US)', 1],
-    ['Top Paid iOS Games (US)', 1],
-    ['Top Grossing iOS Games (US)', 1],
-    ['Top Free iPad Games (US)', 1],
-    ['Top Paid iPad Games (US)', 1],
-    ['Top Grossing iPad Games (US)', 1]
-]
+#  Call following fucntion with pageItems you want to scrap on main page.
 
 def main_function(facebook_apps = None, Top_Free_iOS_Games_US = None, Top_Paid_iOS_Games_US = None,
                   Top_Grossing_iOS_Games_US = None, Top_Free_iPad_Games_US = None, Top_Paid_iPad_Games_US = None,
@@ -260,6 +241,44 @@ def main_function(facebook_apps = None, Top_Free_iOS_Games_US = None, Top_Paid_i
         for i, l in enumerate(main_data_part2_6):
             for j, col in enumerate(l):
                 sheet7.write(i, j, col)
+
+    # xls file is ready to sent in mail as attachment
+
+    mail_user = "snehal.java@gmail.com"
+    mail_pwd = ""
+    FROM = 'mail_from'
+    TO = ['mail_to'] #must be a list
+    SUBJECT = "Testing sending using gmail"
+    TEXT = """From: From Person <from@fromdomain.com>
+              To: To Person <to@todomain.com>
+              MIME-Version: 1.0
+              Content-type: text/html
+              Subject: SMTP HTML e-mail test
+
+              This is an e-mail message to be sent in HTML format
+
+              <b>This is HTML message.</b>
+              <h1>This is headline.</h1>
+              """
+
+    # Prepare actual message
+    message = """\From: %s\nTo: %s\nSubject: %s\n\n%s
+    """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+    try:
+        #server = smtplib.SMTP(SERVER)
+        server = smtplib.SMTP("smtp.gmail.com", 587) #or port 465 doesn't seem to work!
+        server.ehlo()
+        server.starttls()
+        server.login(mail_user, mail_pwd)
+        server.sendmail(FROM, TO, message)
+        #server.quit()
+        server.close()
+        print 'successfully sent the mail'
+        return 0
+    except:
+        print "failed to send mail"
+        return 1
+
 
 
 
