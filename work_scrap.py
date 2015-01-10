@@ -163,6 +163,108 @@ filepath = '/home/stonex/game_data2.xls'
 
 #  Call following fucntion with pageItems you want to scrap on main page.
 
+option_list = [
+    ['facebook apps', 1],
+    ['Top Free iOS Games (US)', 1],
+    ['Top Paid iOS Games (US)', 1],
+    ['Top Grossing iOS Games (US)', 1],
+    ['Top Free iPad Games (US)', 1],
+    ['Top Paid iPad Games (US)', 1],
+    ['Top Grossing iPad Games (US)', 1]
+]
+
+def main_function(facebook_apps = None, Top_Free_iOS_Games_US = None, Top_Paid_iOS_Games_US = None,
+                  Top_Grossing_iOS_Games_US = None, Top_Free_iPad_Games_US = None, Top_Paid_iPad_Games_US = None,
+                  Top_Grossing_iPad_Games_US = None):
+
+    filepath = '/home/stonex/game_data2.xls'
+
+
+    book = xlwt.Workbook(encoding="utf-8")
+
+
+
+    url_list = [
+                'http://metricsmonk.com/rankings_ios?country=US&type=1&category=6014',
+                # 'http://metricsmonk.com/rankings_ios?country=US&type=1&tCat=GAMES&category=6014&date=06%2F26%2F2014',
+
+                'http://metricsmonk.com/rankings_ios?country=US&type=2&category=6014',
+                # 'http://metricsmonk.com/rankings_ios?country=US&type=2&tCat=GAMES&category=6014&date=06%2F26%2F2014',
+
+                'http://metricsmonk.com/rankings_ios?country=US&type=3&category=6014',
+                # 'http://metricsmonk.com/rankings_ios?country=US&type=3&tCat=GAMES&category=6014&date=06%2F26%2F2014',
+
+                'http://metricsmonk.com/rankings_ios?country=US&type=4&category=6014',
+                # 'http://metricsmonk.com/rankings_ios?country=US&type=4&tCat=GAMES&category=6014&date=06%2F26%2F2014',
+
+                'http://metricsmonk.com/rankings_ios?country=US&type=5&category=6014',
+                # 'http://metricsmonk.com/rankings_ios?country=US&type=5&tCat=GAMES&category=6014&date=06%2F26%2F2014',
+
+                'http://metricsmonk.com/rankings_ios?country=US&type=6&category=6014',
+                # 'http://metricsmonk.com/rankings_ios?country=US&type=6&tCat=GAMES&category=6014&date=06%2F26%2F2014'
+            ]
+
+
+    if facebook_apps:
+        main_data_part1 = scrap_data_page()
+        # writing data in sheet 1
+        sheet1 = book.add_sheet("Facebook Apps")
+        for i, l in enumerate(main_data_part1):
+            for j, col in enumerate(l):
+                sheet1.write(i, j, col)
+
+    if Top_Free_iOS_Games_US:
+        main_data_part2_1 = scrap_data_page_part2(url=url_list[0])
+        # writing data in sheet 2_1
+        sheet2 = book.add_sheet("Top Free iOS Games (US)")
+        for i, l in enumerate(main_data_part2_1):
+            for j, col in enumerate(l):
+                sheet2.write(i, j, col)
+
+    if Top_Paid_iOS_Games_US:
+        main_data_part2_2 = scrap_data_page_part2(url=url_list[1])
+        # writing data in sheet 2_2
+        sheet3 = book.add_sheet("Top Paid iOS Games (US)")
+        for i, l in enumerate(main_data_part2_2):
+            for j, col in enumerate(l):
+                sheet3.write(i, j, col)
+
+    if Top_Grossing_iOS_Games_US:
+        main_data_part2_3 = scrap_data_page_part2(url=url_list[2])
+        # writing data in sheet 2_3
+        sheet4 = book.add_sheet("Top Grossing iOS Games (US)")
+        for i, l in enumerate(main_data_part2_3):
+            for j, col in enumerate(l):
+                sheet4.write(i, j, col)
+
+    if Top_Free_iPad_Games_US:
+        main_data_part2_4 = scrap_data_page_part2(url=url_list[3])
+        # writing data in sheet 2_4
+        sheet5 = book.add_sheet("Top Free iPad Games (US)")
+        for i, l in enumerate(main_data_part2_4):
+            for j, col in enumerate(l):
+                sheet5.write(i, j, col)
+
+    if Top_Paid_iPad_Games_US:
+        main_data_part2_5 = scrap_data_page_part2(url=url_list[4])
+        # writing data in sheet 2_5
+        sheet6 = book.add_sheet("Top Paid iPad Games (US)")
+        for i, l in enumerate(main_data_part2_5):
+            for j, col in enumerate(l):
+                sheet6.write(i, j, col)
+
+    if Top_Grossing_iPad_Games_US:
+        main_data_part2_6 = scrap_data_page_part2(url=url_list[5])
+        # writing data in sheet 2_6
+        sheet7 = book.add_sheet("Top Grossing iPad Games (US)")
+        for i, l in enumerate(main_data_part2_6):
+            for j, col in enumerate(l):
+                sheet7.write(i, j, col)
+
+
+
+# ====================================================================================================
+
 main_data_part1 = scrap_data_page()
 
 url_list = [

@@ -51,7 +51,7 @@ if __name__ == "__main__":
     start_time = time.time()
     user_list = []
     counter = 1
-    for user in users.find():
+    for user in users.find(timeout=False):
         username = user['username']
         print "\n\n\n\n username :", username, "counter: ", counter
 
@@ -89,7 +89,6 @@ if __name__ == "__main__":
         elif user_notification_count_week < no_min_notifications:
             deleted_notification_count = notifications.find({'to': username}).sort('created', -1).skip(20).count()
             deleted_notifications = notifications.find({'to': username}, {'created': 1}).sort('created', -1).skip(20)
-
             # deleted_notification = notifications.remove({'created': {'$lte': timestamp}})
             # deleted_notification = notifications.find({'created': {'$lte': timestamp}}).count()
             for record in deleted_notifications:
@@ -100,10 +99,15 @@ if __name__ == "__main__":
             print "\n From else, username: ", username, " notification count: ", deleted_notification_count
 
         counter += 1
+        # stop here with user count more then that
+        # if counter == 200:
+        #     return 0
+
 
     end_time = time.time()
 
     print "time taken (in seconds ): ", end_time - start_time
+    print "start time: ", start_time, "end time: ", end_time
     # print "total count: ", deleted_notification
     # map(delete_notification_records, user_list)
     # reuslt = [pool.apply(delete_notification_records, args=(x,)) for x in user_list]
