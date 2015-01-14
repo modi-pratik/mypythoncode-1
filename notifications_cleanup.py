@@ -96,9 +96,9 @@ if __name__ == "__main__":
     # ======================================================================================================
     # following are mail settings, please config it, or use your own mail send function and attach excel file created here
 
-    mail_user = "snehal.java@gmail.com"
-    mail_pwd = "snehaldot@gmail.com"
-    FROM = 'snehal.java@gmail.com'
+    mail_user = ""
+    mail_pwd = ""
+    FROM = ''
     TO = ['manish@arcgate.com', 'snehaldot@gmail.com'] #must be a list
     SUBJECT = "Script Output for workmob notifications"
     TEXT = ("""MIME-Version: 1.0

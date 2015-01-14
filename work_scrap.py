@@ -119,6 +119,9 @@ def scrap_data_page_part2(url, arg_page_items=None):
             part2_links.append(link)
 
     for link in part2_links:
+        category = None
+        sub_category = None
+        app_developer = None
         sub_response = requests.get(link)
         sub_soup = bs4.BeautifulSoup(sub_response.text)
 
@@ -138,21 +141,15 @@ def scrap_data_page_part2(url, arg_page_items=None):
         app_name = app_name.encode('utf8')
 
         app_details_list = sub_soup.select('div#app_menubar_left a')
-        category = app_details_list[1].text
-        sub_category = app_details_list[-1].text
+        if len(app_details_list) >= 1:
+            category = app_details_list[1].text
+            sub_category = app_details_list[-1].text
 
         print "Category: ", category, "Sub_category: ", sub_category
         print "\n\n"
-        main_data_set.append([app_name, link, category, sub_category])
+        main_data_set.append([app_name, link, app_developer, category, sub_category])
 
     return main_data_set
-
-# ========================
-# writing in xls file
-#========================
-
-filepath = '/home/stonex/game_data2.xls'
-
 
 #  Call following fucntion with pageItems you want to scrap on main page.
 
@@ -186,7 +183,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
         main_data_part1 = scrap_data_page()
         # writing data in sheet 1
         sheet1 = book.add_sheet("Facebook Apps")
-        headers = ['App Name', 'URL', 'Developer', 'MAU', 'DAU', 'Category', 'Sub- category', 'Launch Date Estimate',
+        headers = ['App Name', 'URL', 'Developer', 'MAU', 'DAU', 'Type', 'Category', 'Sub- category', 'Launch Date Estimate',
                                                                                               'User Rating']
 
         row, col = 0, 0
@@ -205,7 +202,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
 
         row, col = 0, 0
         for col in range(col, len(headers)):
-            sheet1.write(row, col, headers[col])
+            sheet2.write(row, col, headers[col])
 
         for i, l in enumerate(main_data_part2_1, start=1):
             for j, col in enumerate(l):
@@ -219,7 +216,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
 
         row, col = 0, 0
         for col in range(col, len(headers)):
-            sheet1.write(row, col, headers[col])
+            sheet3.write(row, col, headers[col])
 
         for i, l in enumerate(main_data_part2_2, start=1):
             for j, col in enumerate(l):
@@ -233,7 +230,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
 
         row, col = 0, 0
         for col in range(col, len(headers)):
-            sheet1.write(row, col, headers[col])
+            sheet4.write(row, col, headers[col])
 
         for i, l in enumerate(main_data_part2_3, start=1):
             for j, col in enumerate(l):
@@ -247,7 +244,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
 
         row, col = 0, 0
         for col in range(col, len(headers)):
-            sheet1.write(row, col, headers[col])
+            sheet5.write(row, col, headers[col])
 
         for i, l in enumerate(main_data_part2_4, start=1):
             for j, col in enumerate(l):
@@ -261,7 +258,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
 
         row, col = 0, 0
         for col in range(col, len(headers)):
-            sheet1.write(row, col, headers[col])
+            sheet6.write(row, col, headers[col])
 
         for i, l in enumerate(main_data_part2_5, start=1):
             for j, col in enumerate(l):
@@ -275,7 +272,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
 
         row, col = 0, 0
         for col in range(col, len(headers)):
-            sheet1.write(row, col, headers[col])
+            sheet7.write(row, col, headers[col])
 
         for i, l in enumerate(main_data_part2_6, start=1):
             for j, col in enumerate(l):
@@ -290,10 +287,10 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
     book.save(filename)
 
     msg = MIMEMultipart()
-    send_from = 'snehal.java@gmail.com'
-    send_to = 'snehaldot@gmail.com'
-    msg['From'] = 'snehal.java@gmail.com'
-    msg['To'] = 'snehaldot@gmail.com'
+    send_from = 'mail_from'
+    send_to = 'mail_to'
+    msg['From'] = 'mail_from'
+    msg['To'] = 'mail_to'
     msg['Date'] = formatdate(localtime=True)
     msg['Subject'] = "mail with excel attachment"
     msg.attach(MIMEText("text data"))
@@ -309,7 +306,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
     smtp = smtplib.SMTP("smtp.gmail.com", 587)
     smtp.starttls()
     try:
-        smtp.login('snehal.java@gmail.com', "snehaldot@12")
+        smtp.login('mail_username', "mail_password")
         smtp.sendmail(send_from, send_to, msg.as_string())
         print "Successfully sent email"
     except Exception as e:
@@ -319,8 +316,6 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
 
 if __name__ == '__main__':
     # calling main function here with all the options to pass here
-    # main_function(facebook_apps=1, top_free_ios_games_us=0, top_free_ipad_games_us=0, top_grossing_ios_games_us=0,
-    #               top_grossing_ipad_games_us=0, top_paid_ios_games_us=0, top_paid_ipad_games_us=0)
     main_function(facebook_apps=1, top_free_ios_games_us=1, top_free_ipad_games_us=1, top_grossing_ios_games_us=1,
                   top_grossing_ipad_games_us=1, top_paid_ios_games_us=1, top_paid_ipad_games_us=1)
 
