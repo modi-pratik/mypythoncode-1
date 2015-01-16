@@ -81,7 +81,7 @@ if __name__ == "__main__":
     end_time = time.time()
     time_taken = end_time - start_time
 
-    print "time taken (in seconds ): ", end_time - start_time
+    print "time taken (in seconds ): ", time_taken
     print "\nstart time: ", start_time, "end time: ", end_time
 
     delta = timedelta(seconds=time_taken)
