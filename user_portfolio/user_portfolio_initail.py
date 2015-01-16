@@ -25,9 +25,6 @@ if __name__ == '__main__':
 
     users_counter = 0
     for user in users.find():
-        # tmp_user = list(user_protfolio.find({'_id': user}))
-        # import ipdb
-        # ipdb.set_trace()
         if 'follow' in user:
             follow_count = len(user['follow'])
         else:
@@ -43,8 +40,6 @@ if __name__ == '__main__':
         else:
             companiesfan_count = 0
 
-        # import ipdb
-        # ipdb.set_trace()
         user_protfolios.insert({'_id': user['_id'],
                                 'username': user['username'],
                                 'follow_count': follow_count,
