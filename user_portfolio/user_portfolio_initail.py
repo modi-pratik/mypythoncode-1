@@ -18,7 +18,7 @@ if __name__ == '__main__':
     # collections to be used in script
     users = db['users_live']
     # put other collection here too
-    notifications = db['notificationmappings']
+    # notifications = db['notificationmappings']
     user_protfolio = db['user_protfolio']
 
     # cronflag
