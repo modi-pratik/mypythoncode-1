@@ -281,7 +281,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
     # xls file is ready to sent in mail as attachment
     # ==================================================================================
     # following are mail settings, please config it, or use your own mail send function
-    # and attach excel file created here, 
+    # and attach excel file created here,
 
     filename = 'scrap_data.xls'
     book.save(filename)

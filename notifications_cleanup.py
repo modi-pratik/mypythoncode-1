@@ -44,12 +44,13 @@ if __name__ == "__main__":
     # settings for skipping and processing user in batch
     users_to_process = 100 #int(raw_input("Enter the number of user you want to process: "))
     user_to_skip = 0
-    for user in users.find(timeout=False).sort({'username': 1}).skip(user_to_skip).limit(users_to_process):
+    for user in users.find(timeout=False): #.sort({'username': 1}).skip(user_to_skip).limit(users_to_process):
         username = user['username']
         print "\n\n\n\n username :", username, "counter: ", counter
 
         # total notifications count
         notifications_count = notifications.find({'to': username}).count()
+
         # count the no of counts for last 7 days
         user_notification_count_week = notifications.find({'to': username,
                                                            'created': {'$gte': timestamp_days_back}}).count()

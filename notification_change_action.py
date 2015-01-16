@@ -6,6 +6,7 @@ import multiprocessing
 from datetime import timedelta
 from pymongo import MongoClient
 import json
+from bson.objectid import ObjectId
 # import sys
 # from itertools import product
 
@@ -24,11 +25,14 @@ start_time = time.time()
 for notification in notifications.find():
     msg_type = json.loads(notification['msg'])['type']
 
-    # updating msg type to action field
-    notification.update({'action': msg_type})
-    notification_obj_id = notifications.save(notification)
+    # update using set command
+    notifications.update({'_id': notification['_id']}, {'$set': {'action': msg_type}})
+
+    # # updating msg type to action field
+    # notification.update({'action': msg_type})
+    # notification_obj_id = notifications.save(notification)
     print " Updating notification: ", notification_counter,\
-        "notification object id: ", notification_obj_id,\
+        "notification object id: ", notification['_id'],\
         " total notifications: ", total_notifications
     notification_counter += 1
 
