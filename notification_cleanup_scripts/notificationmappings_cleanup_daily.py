@@ -5,14 +5,9 @@ from pymongo import MongoClient
 import datetime
 import sys
 from email_send_ses_gmail import send_email_amazon_ses
-import logging
 
-# logging config
-LOG_FILENAME = 'log_notification_cleanup_daily.log'
-FORMAT = "%(asctime)-15s %(name)s %(levelname)-8s %(message)s"
-logging.basicConfig(format=FORMAT, filename=LOG_FILENAME, level=logging.DEBUG)
+# crontab entry : * 0 * * * /usr/bin/python /home/ec2-user/python_scripts/notificationmappings_cleanup_daily.py
 
-# crontab entry : * 0 * * * /usr/bin/python /home/ec2-user/python_scripts/notification_cleanup_daily.py
 # Following are settings variables for script
 no_min_notifications = 20
 days_in_seconds = 604800
@@ -21,45 +16,44 @@ days_in_seconds = 604800
 # connection_string = raw_input("Please enter the connection string: i.e mongodb://192.168.4.86:27017/ : ")
 # for testing on 86 local server
 # connection_string = 'mongodb://192.168.4.86:27017/'
-# for production 10.184.172.70
+# for production
 connection_string = 'mongodb://localhost:27017'
 
 client = MongoClient(connection_string)
 
 db = client['mobapi']
 
-users = db['users']
+users = db['users_live']
 # put other collection here too
-notifications = db['notification_live_copy']
+# notifications = db['notification_live_copy']
+notifications = db['notificationmappings_copy']
 
 
-def delete_notification_records(arg_username_list):
-    for arg_username in arg_username_list:
-        user_notification_count_whole = notifications.find({'to': arg_username}).sort('created', -1).skip(20).count()
-        user_notifications = notifications.find({'to': arg_username}).sort('created', -1).skip(20)
+def delete_notification_records(arg_username):
+    user_notification_count_whole = notifications.find({'to': arg_username}).sort('created', -1).skip(20).count()
+    user_notifications = notifications.find({'to': arg_username}).sort('created', -1).skip(20)
 
-        for record in user_notifications:
-            remove = notifications.remove({'_id': record['_id']})
-        logging.debug("for user: %s there is no notifications in last week,"
-                      " notification delete count: %d" % (arg_username, user_notification_count_whole))
-        # print "\n\n for user: ", arg_username, " there is no notifications in last week," \
-        #                                        " notification delete count: ", (user_notification_count_whole - 20)
+    for record in user_notifications:
+        remove = notifications.remove({'_id': record['_id']})
+    print "\n\n for user: ", arg_username, " there is no notifications in last week," \
+                                           " notification delete count: ", (user_notification_count_whole - 20)
 
 
 if __name__ == "__main__":
     try:
+        a = 1/0
+        import ipdb
+        ipdb.set_trace()
         # no_of_processes = int(raw_input("Please enter the number of processes you want to run: "))
         # pool = multiprocessing.Pool(processes=no_of_processes)
         start_time = time.time()
 
-        logging.debug("Script starting time : %s", start_time)
         user_list = []
         counter = 1
 
-        for user in users.find(timeout=False).limit(10):
+        for user in users.find(timeout=False):
             username = user['username']
-            logging.debug(" username :", username, "counter: ", counter)
-            # print "\n\n\n\n username :", username, "counter: ", counter
+            print "\n\n\n\n username :", username, "counter: ", counter
 
             # total notifications count
             notifications_count = notifications.find({'to': username}).count()
@@ -77,22 +71,18 @@ if __name__ == "__main__":
                 if user_notification_count_week >= no_min_notifications:
                     # notifications are more then 20 for 7 days, delete all notifications older then 7 days
                     op_result_inter = notifications.remove({'to': username, 'created': {'$lte': timestamp_days_back}})
-                    logging.debug("Removed using mongod remove function,  username: ", username,\
-                                  " delete notification count: ", op_result_inter)
-                    # print "\n\n Removed using mongod remove function,  username: ", username, \
-                    #     " delete notification count: ", op_result_inter
+                    print "\n\n Removed using mongod remove function,  username: ", username, \
+                        " delete notification count: ", op_result_inter
 
                 elif user_notification_count_week < no_min_notifications < notifications_count:
-                    logging.debug(" user: ", username, " added to user_list for delete ltr using multiprocess")
-                    # print " 1 user: ", username, " added to user_list for delete ltr using multiprocess"
+                    print " 1 user: ", username, " added to user_list for delete ltr using multiprocess"
                     user_list.append(username)
 
             else:
-                logging.debug("for user: ", username, " there is no notifications")
-                # print "\n\n for user: ", username, " there is no notifications"
+                print "\n\n for user: ", username, " there is no notifications"
 
-                # remove all the notifications which have unread 1
             counter += 1
+                # remove all the notifications which have unread 1
 
         # map(delete_notification_records, user_list)
 
@@ -100,40 +90,34 @@ if __name__ == "__main__":
         end_time = time.time()
         time_taken = end_time - start_time
 
-        logging.debug("time taken (in seconds ): ", time_taken)
-        # print "time taken (in seconds ): ", time_taken
-        logging.debug("start time: ", start_time, "end time: ", end_time)
-        # print "\nstart time: ", start_time, "end time: ", end_time
+        print "time taken (in seconds ): ", end_time - start_time
+        print "\nstart time: ", start_time, "end time: ", end_time
 
         delta = timedelta(seconds=time_taken)
         time_string = "%d days %02d:%02d:%02d" % (delta.days, delta.seconds / 3600, (delta.seconds / 60) % 60,
                                                   delta.seconds % 60)
-        logging.debug("Time taken: %s", time_string)
-        # print "\n Time taken: %s", time_string
+        print "\n Time taken: %s", time_string
 
         # ======================================================================================================
         # following are mail sending part
 
-        TEXT = "\nTime taken for the Notification_cleanup_daily script: %s and \nCurrently total number notifications: %s " \
+        TEXT = "\nTime taken for the notificationmappings script: %s and \nCurrently total number notifications: %s " \
                " \nStart time: %s, and \nEnd time: %s" % (time_string, notifications.count(),
                                                           datetime.datetime.fromtimestamp(int(start_time)).strftime(
                                                               '%Y-%m-%d %H:%M:%S'),
                                                           datetime.datetime.fromtimestamp(int(end_time)).strftime(
                                                               '%Y-%m-%d %H:%M:%S')
-               )
+                                                          )
 
-        email_list = ['snehal@arcgate.com', 'snehaldot@gmail.com', 'baran@arcgate.com', 'manish@arcgate.com']
-        # email_list = ['snehal@arcgate.com', 'snehaldot@gmail.com']
-        send_email_amazon_ses(mail_from='hello@workmobmail.com', mail_to=email_list, message=TEXT)
+        send_email_amazon_ses(mail_from='hello@workmobmail.com',
+                              mail_to=['snehal@arcgate.com', 'snehaldot@gmail.com', 'kbagla@arcgate.com'],
+                              message=TEXT)
 
         # send_mail_gmail(mail_from='arcgatemailtest@gmail.com', mail_to=['snehal@arcgate.com', 'snehaldot@gmail.com'],
         # host='smtp.gmail.com', message=TEXT, mail_user='arcgatemailtest@gmail.com', mail_pwd='Arcgate1!')
     except:
-        TEXT = "Exception in running the script, please check log file for more details" \
-               " Exception: %s" % sys.exc_info()[0]
+        TEXT = "Some exception happened: ", sys.exc_info()[0]
 
-        email_list = ['snehal@arcgate.com', 'snehaldot@gmail.com', 'baran@arcgate.com', 'manish@arcgate.com']
-        #email_list = ['snehal@arcgate.com', 'snehaldot@gmail.com']
         send_email_amazon_ses(mail_from='hello@workmobmail.com',
-                              mail_to=email_list,
+                              mail_to=['snehal@arcgate.com', 'snehaldot@gmail.com', 'kbagla@arcgate.com'],
                               message=TEXT)

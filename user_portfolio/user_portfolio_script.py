@@ -1,6 +1,7 @@
 __author__ = 'Snehal'
 
-# from DBSetting import db #, delete_notification_records
+# from DBSetting import db
+# , delete_notification_records
 import time
 from datetime import timedelta
 from pymongo import MongoClient
@@ -24,7 +25,7 @@ if __name__ == '__main__':
 
     # cronflag
 
-    for notification in notifications.find():
+    for notification in notifications.find({'cronflag': 0}):
         to_username = notification['to']
         from_username = notification['from']
 
@@ -33,6 +34,7 @@ if __name__ == '__main__':
             import ipdb
             ipdb.set_trace()
 
+            # updating user follow count
             from_ln = list(user_protfolio.find({'_id': from_username}))
 
             if from_ln:
@@ -44,7 +46,7 @@ if __name__ == '__main__':
                                         'follower_count': 0,
                                         'company_fan_count': 0}})
 
-
+            # updating user follower count
             to_ln = list(user_protfolio.find({'_id': to_username}))
 
             if to_ln:
@@ -56,11 +58,18 @@ if __name__ == '__main__':
                                         'follower_count': 1,
                                         'company_fan_count': 0}})
 
-            # company_fan_count
-            if notification['key'] == 'company' and notification['action'] == 'fan':
-                import ipdb
-                ipdb.set_trace()
+            # updating cronflag to make count
+            notification['cronflag'] = 1
+
+        # updating company_fan_count
+
+        if notification['key'] == 'company' and notification['action'] == 'fan':
+            import ipdb
+            ipdb.set_trace()
             user_protfolio.insert({'_id': from_username})
+
+            # updating cronflag to make count
+            notification['cronflag'] = 1
 
     end_time = time.time()
     time_taken = end_time - start_time

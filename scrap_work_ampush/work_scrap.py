@@ -3,184 +3,205 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.utils import formatdate
 import smtplib
+from datetime import timedelta
 import requests
 import bs4
+import time
 import xlwt
 from email.mime.multipart import MIMEMultipart
 
 
-def scrap_data_page(arg_page_items=None):
+def scrap_data_page(number_apps=None):
     print "\n\n starting the work for part1 facebook apps \n\n"
     # to get the top apps from page
-    if arg_page_items:
-        response = requests.get(
-            'http://metricsmonk.com/rankings/custom?type=APP&dimension=MAU&category=all&gender=&age=&country=&date=&paging=' + arg_page_items)
-    else:
-        response = requests.get(
-            'http://metricsmonk.com/rankings/custom?type=APP&dimension=MAU&category=all&gender=&age=&country=&date=&paging=')
+
+    number_pages = range(0, number_apps, 20)
+
     main_data_set = []
-    links = []
-
-    soup = bs4.BeautifulSoup(response.text)
-    table = soup.findChildren('table')[0]
-
-    for row in table.findChildren('tr'):
-        if row.findChildren('a'):
-            link = row.find('a')['href']
-            links.append(link)
-
-    print " \n\n Got links from main page \n\n "
-
-    # sub link part to get the app data
-    for link in links:
-        app_developer = None
-        app_type = None
-        sub_category = None
-        category = None
-        launch_date_estimate = None
-        user_rating = None
-
-        print "\nURL link: ", link
-        sub_response = requests.get(link)
-        sub_soup = bs4.BeautifulSoup(sub_response.text)
-
-        # for app name
-        app_tag = sub_soup.findChildren('h1')[0]
-        app_name = app_tag.text
-
-        # for develop by
-        if 'by' in app_name:
-            app_developer = app_name.split('by')[1]
-            app_name = app_name.split('by')[0]
-            print "app_name: ", app_name
-            print "app_developer: ", app_developer
+    for arg_page_items in number_pages:
+        print "\n\nPart1: getting the data for ", arg_page_items, "to ", arg_page_items + 20
+        if arg_page_items:
+            response = requests.get(
+                'http://metricsmonk.com/rankings/custom?type=APP&dimension=MAU&category=all&gender=&age=&country=&date=&paging=' + str(arg_page_items))
         else:
-            print "app_name: ", app_name
+            response = requests.get(
+                'http://metricsmonk.com/rankings/custom?type=APP&dimension=MAU&category=all&gender=&age=&country=&date=&paging=')
 
-        # unicode remove:
-        app_name = app_name.encode('utf8')
+        links = []
 
-        # for MAU and DAU
-        developerorplatform = sub_soup.select('div.developerorplatform')[0]
-        mau_dau_data = developerorplatform.findChildren('th')
-        mau = int(mau_dau_data[2].text.replace(',', ''))
-        dau = int(mau_dau_data[3].text.replace(',', ''))
+        soup = bs4.BeautifulSoup(response.text)
+        table = soup.findChildren('table')[0]
 
-        # for category, sub_category, (type not yet final)
-        left_menu = sub_soup.select('div#app_menubar_left')[0]
+        for row in table.findChildren('tr'):
+            if row.findChildren('a'):
+                link = row.find('a')['href']
+                links.append(link)
 
-        for line in left_menu.strings:
-            if line == 'Categories':
-                cat_data = line.next
-                cat_list = cat_data.split('>>')
-                app_type = cat_list[0]
+        print " \n\n Got links from main page \n\n "
 
-                if len(cat_list) == 2:
-                    category = cat_list[1]
-                elif len(cat_list) > 2:
-                    sub_category = cat_list[2]
-                else:
-                    category = None
-                    sub_category = None
-                print "Type: ", app_type, "Category: ", category, " Sub_category: ", sub_category
-            if line == 'Launch Date Estimate':
-                launch_date_estimate = line.next.string
-                print 'Launch Date Estimate: ', launch_date_estimate
-            if line == 'User Rating':
-                user_rating = line.next
-                print "User Rating:", user_rating
+        # sub link part to get the app data
+        for link in links:
+            app_developer = None
+            app_type = None
+            sub_category = None
+            category = None
+            launch_date_estimate = None
+            user_rating = None
 
-        main_data_set.append([link, app_name, app_developer, mau, dau, app_type, category,
-                              sub_category, launch_date_estimate, user_rating])
+            print "\nURL link: ", link
+            sub_response = requests.get(link)
+            sub_soup = bs4.BeautifulSoup(sub_response.text)
+
+            # for app name
+            app_tag = sub_soup.findChildren('h1')[0]
+            app_name = app_tag.text
+
+            # for develop by
+            if 'by' in app_name:
+                app_developer = app_name.split('by')[1]
+                app_name = app_name.split('by')[0]
+                # print "app_name: ", app_name
+                # print "app_developer: ", app_developer
+            else:
+                pass
+                # print "app_name: ", app_name
+
+            # unicode remove:
+            app_name = app_name.encode('utf8')
+
+            # for MAU and DAU
+            developerorplatform = sub_soup.select('div.developerorplatform')[0]
+            mau_dau_data = developerorplatform.findChildren('th')
+            mau = int(mau_dau_data[2].text.replace(',', ''))
+            dau = int(mau_dau_data[3].text.replace(',', ''))
+
+            # for category, sub_category, (type not yet final)
+            left_menu = sub_soup.select('div#app_menubar_left')[0]
+
+            for line in left_menu.strings:
+                if line == 'Categories':
+                    cat_data = line.next
+                    cat_list = cat_data.split('>>')
+                    app_type = cat_list[0]
+
+                    if len(cat_list) == 2:
+                        category = cat_list[1]
+                    elif len(cat_list) > 2:
+                        sub_category = cat_list[2]
+                    else:
+                        category = None
+                        sub_category = None
+                        # print "Type: ", app_type, "Category: ", category, " Sub_category: ", sub_category
+                if line == 'Launch Date Estimate':
+                    launch_date_estimate = line.next.string
+                    # print 'Launch Date Estimate: ', launch_date_estimate
+                if line == 'User Rating':
+                    user_rating = line.next
+                    # print "User Rating:", user_rating
+
+            main_data_set.append([link, app_name, app_developer, mau, dau, app_type, category,
+                                  sub_category, launch_date_estimate, user_rating])
 
     return main_data_set
 
 # ========================================================================================================
 
 
-def scrap_data_page_part2(url, arg_page_items=None):
-    print "\n\n starting the work for part2 iOS Apps\n\n"
+def scrap_data_page_part2(url, number_apps):
+    print "\n\n starting the work for part2 iOS Apps for url: \n\n", url
 
-    if arg_page_items:
-        part2_url = url + arg_page_items
-    else:
-        part2_url = url
-
-    part2_response = requests.get(part2_url)
-    part2_soup = bs4.BeautifulSoup(part2_response.text)
-
-    part2_table = part2_soup.findChildren('table')[0]
-    part2_links = []
+    number_pages = range(0, number_apps, 20)
     main_data_set = []
+    for arg_page_items in number_pages:
+        print "\n\nPart2: getting the data for ", arg_page_items, "to ", arg_page_items + 20
 
-    for row in part2_table.findChildren('tr'):
-        if row.findChildren('a'):
-            link = row.find('a')['href']
-            part2_links.append(link)
-
-    for link in part2_links:
-        category = None
-        sub_category = None
-        app_developer = None
-        sub_response = requests.get(link)
-        sub_soup = bs4.BeautifulSoup(sub_response.text)
-
-        # for app name
-        app_tag = sub_soup.findChildren('h1')[0]
-        app_name = app_tag.text
-
-        # for develop by
-        if 'by' in app_name:
-            app_developer = app_name.split('by')[1]
-            app_name = app_name.split('by')[0]
-            print "app_name: ", app_name
-            print "app_developer: ", app_developer
+        if arg_page_items:
+            part2_url = url + str(arg_page_items)
         else:
-            print "app_name: ", app_name
-        # unicode remove:
-        app_name = app_name.encode('utf8')
+            part2_url = url
 
-        app_details_list = sub_soup.select('div#app_menubar_left a')
-        if len(app_details_list) >= 1:
-            category = app_details_list[1].text
-            sub_category = app_details_list[-1].text
+        part2_response = requests.get(part2_url)
+        part2_soup = bs4.BeautifulSoup(part2_response.text)
 
-        print "Category: ", category, "Sub_category: ", sub_category
-        print "\n\n"
-        main_data_set.append([app_name, link, app_developer, category, sub_category])
+        part2_table = part2_soup.findChildren('table')[0]
+        part2_links = []
+
+        for row in part2_table.findChildren('tr'):
+            if row.findChildren('a'):
+                link = row.find('a')['href']
+                part2_links.append(link)
+
+        for link in part2_links:
+            print "url link: ", link
+            category = None
+            sub_category = None
+            app_developer = None
+            sub_response = requests.get(link)
+            sub_soup = bs4.BeautifulSoup(sub_response.text)
+
+            # for app name
+            app_tag = sub_soup.findChildren('h1')
+            if app_tag:
+                app_name = app_tag[0].text
+            else:
+                app_name = None
+
+            # for develop by
+            if 'by' in app_name:
+                app_developer = app_name.split('by')[1]
+                app_name = app_name.split('by')[0]
+                # print "app_name: ", app_name
+                # print "app_developer: ", app_developer
+            else:
+                pass
+                # print "app_name: ", app_name
+            # unicode remove:
+            app_name = app_name.encode('utf8')
+
+            app_details_list = sub_soup.select('div#app_menubar_left a')
+            if len(app_details_list) >= 1:
+                category = app_details_list[1].text
+                sub_category = app_details_list[-1].text
+
+            # print "Category: ", category, "Sub_category: ", sub_category
+            # print "\n\n"
+            main_data_set.append([app_name, link, app_developer, category, sub_category])
 
     return main_data_set
 
-#  Call following fucntion with pageItems you want to scrap on main page.
 
+#  Call following fucntion with pageItems you want to scrap on main page.
 def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_games_us=None,
                   top_grossing_ios_games_us=None, top_free_ipad_games_us=None, top_paid_ipad_games_us=None,
                   top_grossing_ipad_games_us=None):
 
+    start_time = time.time()
+    # number of apps should be in multiple of 20 as each page has 20 apps
+    number_apps = 60 # change here
     book = xlwt.Workbook(encoding="utf-8")
 
     url_list = [
-                'http://metricsmonk.com/rankings_ios?country=US&type=1&category=6014',
+                'http://metricsmonk.com/rankings_ios?country=US&type=1&category=6014&paging=',
                 # 'http://metricsmonk.com/rankings_ios?country=US&type=1&tCat=GAMES&category=6014&date=06%2F26%2F2014',
 
-                'http://metricsmonk.com/rankings_ios?country=US&type=2&category=6014',
+                'http://metricsmonk.com/rankings_ios?country=US&type=2&category=6014&paging=',
                 # 'http://metricsmonk.com/rankings_ios?country=US&type=2&tCat=GAMES&category=6014&date=06%2F26%2F2014',
 
-                'http://metricsmonk.com/rankings_ios?country=US&type=3&category=6014',
+                'http://metricsmonk.com/rankings_ios?country=US&type=3&category=6014&paging=',
                 # 'http://metricsmonk.com/rankings_ios?country=US&type=3&tCat=GAMES&category=6014&date=06%2F26%2F2014',
 
-                'http://metricsmonk.com/rankings_ios?country=US&type=4&category=6014',
+                'http://metricsmonk.com/rankings_ios?country=US&type=4&category=6014&paging=',
                 # 'http://metricsmonk.com/rankings_ios?country=US&type=4&tCat=GAMES&category=6014&date=06%2F26%2F2014',
 
-                'http://metricsmonk.com/rankings_ios?country=US&type=5&category=6014',
+                'http://metricsmonk.com/rankings_ios?country=US&type=5&category=6014&paging=',
                 # 'http://metricsmonk.com/rankings_ios?country=US&type=5&tCat=GAMES&category=6014&date=06%2F26%2F2014',
 
-                'http://metricsmonk.com/rankings_ios?country=US&type=6&category=6014',
+                'http://metricsmonk.com/rankings_ios?country=US&type=6&category=6014&paging=',
                 # 'http://metricsmonk.com/rankings_ios?country=US&type=6&tCat=GAMES&category=6014&date=06%2F26%2F2014'
-            ]
+                ]
 
     if facebook_apps:
-        main_data_part1 = scrap_data_page()
+        main_data_part1 = scrap_data_page(number_apps=number_apps)
         # writing data in sheet 1
         sheet1 = book.add_sheet("Facebook Apps")
         headers = ['App Name', 'URL', 'Developer', 'MAU', 'DAU', 'Type', 'Category', 'Sub- category', 'Launch Date Estimate',
@@ -195,7 +216,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
                 sheet1.write(i, j, col)
 
     if top_free_ios_games_us:
-        main_data_part2_1 = scrap_data_page_part2(url=url_list[0])
+        main_data_part2_1 = scrap_data_page_part2(url=url_list[0], number_apps=number_apps)
         # writing data in sheet 2_1
         sheet2 = book.add_sheet("Top Free iOS Games (US)")
         headers = ['App Name', 'URL', 'Developer', 'Category', 'Sub- category']
@@ -209,7 +230,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
                 sheet2.write(i, j, col)
 
     if top_paid_ios_games_us:
-        main_data_part2_2 = scrap_data_page_part2(url=url_list[1])
+        main_data_part2_2 = scrap_data_page_part2(url=url_list[1], number_apps=number_apps)
         # writing data in sheet 2_2
         sheet3 = book.add_sheet("Top Paid iOS Games (US)")
         headers = ['App Name', 'URL', 'Developer', 'Category', 'Sub- category']
@@ -223,7 +244,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
                 sheet3.write(i, j, col)
 
     if top_grossing_ios_games_us:
-        main_data_part2_3 = scrap_data_page_part2(url=url_list[2])
+        main_data_part2_3 = scrap_data_page_part2(url=url_list[2], number_apps=number_apps)
         # writing data in sheet 2_3
         sheet4 = book.add_sheet("Top Grossing iOS Games (US)")
         headers = ['App Name', 'URL', 'Developer', 'Category', 'Sub- category']
@@ -237,7 +258,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
                 sheet4.write(i, j, col)
 
     if top_free_ipad_games_us:
-        main_data_part2_4 = scrap_data_page_part2(url=url_list[3])
+        main_data_part2_4 = scrap_data_page_part2(url=url_list[3], number_apps=number_apps)
         # writing data in sheet 2_4
         sheet5 = book.add_sheet("Top Free iPad Games (US)")
         headers = ['App Name', 'URL', 'Developer', 'Category', 'Sub- category']
@@ -251,7 +272,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
                 sheet5.write(i, j, col)
 
     if top_paid_ipad_games_us:
-        main_data_part2_5 = scrap_data_page_part2(url=url_list[4])
+        main_data_part2_5 = scrap_data_page_part2(url=url_list[4], number_apps=number_apps)
         # writing data in sheet 2_5
         sheet6 = book.add_sheet("Top Paid iPad Games (US)")
         headers = ['App Name', 'URL', 'Developer', 'Category', 'Sub- category']
@@ -265,7 +286,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
                 sheet6.write(i, j, col)
 
     if top_grossing_ipad_games_us:
-        main_data_part2_6 = scrap_data_page_part2(url=url_list[5])
+        main_data_part2_6 = scrap_data_page_part2(url=url_list[5], number_apps=number_apps)
         # writing data in sheet 2_6
         sheet7 = book.add_sheet("Top Grossing iPad Games (US)")
         headers = ['App Name', 'URL', 'Developer', 'Category', 'Sub- category']
@@ -278,22 +299,33 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
             for j, col in enumerate(l):
                 sheet7.write(i, j, col)
 
+    end_time = time.time()
+    time_taken = end_time - start_time
+    delta = timedelta(seconds=time_taken)
+    time_string = "%d days %02d:%02d:%02d" % (delta.days, delta.seconds / 3600, (delta.seconds / 60) % 60,
+                                              delta.seconds % 60)
+
     # xls file is ready to sent in mail as attachment
     # ==================================================================================
     # following are mail settings, please config it, or use your own mail send function
     # and attach excel file created here,
 
+
     filename = 'scrap_data.xls'
     book.save(filename)
 
     msg = MIMEMultipart()
-    send_from = 'mail_from'
-    send_to = 'mail_to'
-    msg['From'] = 'mail_from'
-    msg['To'] = 'mail_to'
+    send_from = '******'
+    send_to = '*******'
+    mail_username, mail_password = '*********', "*********"
+
+    msg['From'] = send_from
+    msg['To'] = send_to
     msg['Date'] = formatdate(localtime=True)
-    msg['Subject'] = "mail with excel attachment"
-    msg.attach(MIMEText("text data"))
+    msg['Subject'] = "Mail with excel attachment for data created using scrapping site"
+    mail_text = "Hi,\n Please verify Mail and excel attachment for data created using scrapping site, " \
+                "if there's any issue please contact time taken for run the script: " + time_string
+    msg.attach(MIMEText(mail_text))
 
     part = MIMEBase('application', "octet-stream")
     part.set_payload(open(filename, "rb").read())
@@ -307,7 +339,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
     smtp = smtplib.SMTP("smtp.gmail.com", 587)
     smtp.starttls()
     try:
-        smtp.login('mail_username', "mail_password")
+        smtp.login(mail_username, mail_password)
         smtp.sendmail(send_from, send_to, msg.as_string())
         print "Successfully sent email"
     except Exception as e:
