@@ -1,0 +1,415 @@
+{
+    'runStats': {
+        'linesRecommended': 82,
+        'linesProcessed': 186,
+        'linesPassed': 2351
+    },
+    'results': [
+        {
+            'queryMask': '{"$query":{"ref_id":"<val>","type":"<val>"}}',
+            'namespace': 'mobapi.searches',
+            'recommendation': {
+                'index': '{"ref_id": 1, "type": 1}',
+                'namespace': 'mobapi.searches',
+                'shellCommand': 'db["searches"].ensureIndex({"ref_id": 1, "type": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 7,
+                'totalTimeMillis': 7111,
+                'avgTimeMillis': 1015
+            }
+        },
+        {
+            'queryMask': '{"$orderby":[],"$query":{"ref_id":"<val>","type":"<val>"}}',
+            'namespace': 'mobapi.searches',
+            'recommendation': {
+                'index': '{"ref_id": 1, "type": 1}',
+                'namespace': 'mobapi.searches',
+                'shellCommand': 'db["searches"].ensureIndex({"ref_id": 1, "type": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 7,
+                'totalTimeMillis': 1279,
+                'avgTimeMillis': 182
+            }
+        },
+        {
+            'queryMask': '{"$query":{"options":"<val>","ref_id":"<val>"}}',
+            'namespace': 'mobapi.images',
+            'recommendation': {
+                'index': '{"ref_id": 1, "options": 1}',
+                'namespace': 'mobapi.images',
+                'shellCommand': 'db["images"].ensureIndex({"ref_id": 1, "options": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 12,
+                'totalTimeMillis': 409,
+                'avgTimeMillis': 34
+            }
+        },
+        {
+            'queryMask': '{"$query":{"group_id":"<val>","status":"<val>"}}',
+            'namespace': 'mobapi.groupstreams',
+            'recommendation': {
+                'index': '{"group_id": 1, "status": 1}',
+                'namespace': 'mobapi.groupstreams',
+                'shellCommand': 'db["groupstreams"].ensureIndex({"group_id": 1, "status": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 8,
+                'totalTimeMillis': 281,
+                'avgTimeMillis': 35
+            }
+        },
+        {
+            'queryMask': '{"$query":{"to":"<val>"}}',
+            'namespace': 'mobapi.notificationmappings',
+            'recommendation': {
+                'index': '{"to": 1}',
+                'namespace': 'mobapi.notificationmappings',
+                'shellCommand': 'db["notificationmappings"].ensureIndex({"to": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 5,
+                'totalTimeMillis': 198,
+                'avgTimeMillis': 39
+            }
+        },
+        {
+            'queryMask': '{"$query":{"to":"<val>"}}',
+            'namespace': 'mobapi.notifications',
+            'recommendation': {
+                'index': '{"to": 1}',
+                'namespace': 'mobapi.notifications',
+                'shellCommand': 'db["notifications"].ensureIndex({"to": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 4,
+                'totalTimeMillis': 170,
+                'avgTimeMillis': 42
+            }
+        },
+        {
+            'queryMask': '{"$orderby":{"_id":-1},"$query":{"type":"<val>"}}',
+            'namespace': 'mobapi.backgroundsettings',
+            'recommendation': {
+                'index': '{"type": 1, "_id": 1}',
+                'namespace': 'mobapi.backgroundsettings',
+                'shellCommand': 'db["backgroundsettings"].ensureIndex({"type": 1, "_id": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 4,
+                'totalTimeMillis': 153,
+                'avgTimeMillis': 38
+            }
+        },
+        {
+            'queryMask': '{"$query":{"status":"<val>","trending":"<val>"}}',
+            'namespace': 'mobapi.companies',
+            'recommendation': {
+                'index': '{"status": 1, "trending": 1}',
+                'namespace': 'mobapi.companies',
+                'shellCommand': 'db["companies"].ensureIndex({"status": 1, "trending": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 3,
+                'totalTimeMillis': 98,
+                'avgTimeMillis': 32
+            }
+        },
+        {
+            'queryMask': '{"$query":{"members.role":"<val>","members.uid":"<val>"}}',
+            'namespace': 'mobapi.groups',
+            'recommendation': {
+                'index': '{"members.uid": 1, "members.role": 1}',
+                'namespace': 'mobapi.groups',
+                'shellCommand': 'db["groups"].ensureIndex({"members.uid": 1, "members.role": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 1,
+                'totalTimeMillis': 83,
+                'avgTimeMillis': 83
+            }
+        },
+        {
+            'queryMask': '{"$query":{"_pid":"<val>","status":{"$in":[]}}}',
+            'namespace': 'mobapi.categories',
+            'recommendation': {
+                'index': '{"_pid": 1, "status": 1}',
+                'namespace': 'mobapi.categories',
+                'shellCommand': 'db["categories"].ensureIndex({"_pid": 1, "status": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 2,
+                'totalTimeMillis': 77,
+                'avgTimeMillis': 38
+            }
+        },
+        {
+            'queryMask': '{"$query":{"company_id":"<val>","status":"<val>"}}',
+            'namespace': 'mobapi.streams',
+            'recommendation': {
+                'index': '{"status": 1, "company_id": 1}',
+                'namespace': 'mobapi.streams',
+                'shellCommand': 'db["streams"].ensureIndex({"status": 1, "company_id": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 3,
+                'totalTimeMillis': 74,
+                'avgTimeMillis': 24
+            }
+        },
+        {
+            'queryMask': '{"$query":{"user_id":{"$ne":"<val>"}}}',
+            'namespace': 'mobapi.activitylogs',
+            'recommendation': {
+                'index': '{"user_id": 1}',
+                'namespace': 'mobapi.activitylogs',
+                'shellCommand': 'db["activitylogs"].ensureIndex({"user_id": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 3,
+                'totalTimeMillis': 64,
+                'avgTimeMillis': 21
+            }
+        },
+        {
+            'queryMask': '{"$query":{"_id":{"$in":[]},"_pid":"<val>","status":{"$in":[]},"type":"<val>"}}',
+            'namespace': 'mobapi.categories',
+            'recommendation': {
+                'index': '{"_pid": 1, "type": 1, "status": 1, "_id": 1}',
+                'namespace': 'mobapi.categories',
+                'shellCommand': 'db["categories"].ensureIndex({"_pid": 1, "type": 1, "status": 1, "_id": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 2,
+                'totalTimeMillis': 60,
+                'avgTimeMillis': 30
+            }
+        },
+        {
+            'queryMask': '{"$query":{"teamid":"<val>"}}',
+            'namespace': 'mobapi.groupstreams',
+            'recommendation': {
+                'index': '{"teamid": 1}',
+                'namespace': 'mobapi.groupstreams',
+                'shellCommand': 'db["groupstreams"].ensureIndex({"teamid": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 1,
+                'totalTimeMillis': 59,
+                'avgTimeMillis': 59
+            }
+        },
+        {
+            'queryMask': '{"$query":{"reference_id":{"$in":[]}}}',
+            'namespace': 'mobapi.groupcomments',
+            'recommendation': {
+                'index': '{"reference_id": 1}',
+                'namespace': 'mobapi.groupcomments',
+                'shellCommand': 'db["groupcomments"].ensureIndex({"reference_id": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 2,
+                'totalTimeMillis': 55,
+                'avgTimeMillis': 27
+            }
+        },
+        {
+            'queryMask': '{"$query":{"reference_id":{"$in":[]}}}',
+            'namespace': 'mobapi.streamcomments',
+            'recommendation': {
+                'index': '{"reference_id": 1}',
+                'namespace': 'mobapi.streamcomments',
+                'shellCommand': 'db["streamcomments"].ensureIndex({"reference_id": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 2,
+                'totalTimeMillis': 55,
+                'avgTimeMillis': 27
+            }
+        },
+        {
+            'queryMask': '{"$query":{"members.uid":"<val>"}}',
+            'namespace': 'mobapi.groups',
+            'recommendation': {
+                'index': '{"members.uid": 1}',
+                'namespace': 'mobapi.groups',
+                'shellCommand': 'db["groups"].ensureIndex({"members.uid": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 2,
+                'totalTimeMillis': 52,
+                'avgTimeMillis': 26
+            }
+        },
+        {
+            'queryMask': '{"$query":{"stream_id":"<val>"}}',
+            'namespace': 'mobapi.hashstreams',
+            'recommendation': {
+                'index': '{"stream_id": 1}',
+                'namespace': 'mobapi.hashstreams',
+                'shellCommand': 'db["hashstreams"].ensureIndex({"stream_id": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 2,
+                'totalTimeMillis': 48,
+                'avgTimeMillis': 24
+            }
+        },
+        {
+            'queryMask': '{"$orderby":{"created":-1},"$query":{"to":"<val>"}}',
+            'namespace': 'mobapi.notifications',
+            'recommendation': {
+                'index': '{"to": 1, "created": 1}',
+                'namespace': 'mobapi.notifications',
+                'shellCommand': 'db["notifications"].ensureIndex({"to": 1, "created": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 2,
+                'totalTimeMillis': 47,
+                'avgTimeMillis': 23
+            }
+        },
+        {
+            'queryMask': '{"$query":{"qatool_flag":"<val>","qatool_uid":"<val>"}}',
+            'namespace': 'mobapi.queue_images',
+            'recommendation': {
+                'index': '{"qatool_uid": 1, "qatool_flag": 1}',
+                'namespace': 'mobapi.queue_images',
+                'shellCommand': 'db["queue_images"].ensureIndex({"qatool_uid": 1, "qatool_flag": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 1,
+                'totalTimeMillis': 39,
+                'avgTimeMillis': 39
+            }
+        },
+        {
+            'queryMask': '{"$query":{"apikey":"<val>"}}',
+            'namespace': 'mobapi.apikeys',
+            'recommendation': {
+                'index': '{"apikey": 1}',
+                'namespace': 'mobapi.apikeys',
+                'shellCommand': 'db["apikeys"].ensureIndex({"apikey": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 1,
+                'totalTimeMillis': 30,
+                'avgTimeMillis': 30
+            }
+        },
+        {
+            'queryMask': '{"$orderby":{"membercount":-1},"$query":{"status":"<val>","viral":"<val>"}}',
+            'namespace': 'mobapi.groups',
+            'recommendation': {
+                'index': '{"status": 1, "viral": 1, "membercount": 1}',
+                'namespace': 'mobapi.groups',
+                'shellCommand': 'db["groups"].ensureIndex({"status": 1, "viral": 1, "membercount": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 1,
+                'totalTimeMillis': 29,
+                'avgTimeMillis': 29
+            }
+        },
+        {
+            'queryMask': '{"$orderby":[],"$query":{"_id":"<val>","companiesmember.status":"<val>"}}',
+            'namespace': 'mobapi.users',
+            'recommendation': {
+                'index': '{"_id": 1, "companiesmember.status": 1}',
+                'namespace': 'mobapi.users',
+                'shellCommand': 'db["users"].ensureIndex({"_id": 1, "companiesmember.status": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 1,
+                'totalTimeMillis': 29,
+                'avgTimeMillis': 29
+            }
+        },
+        {
+            'queryMask': '{"$query":{"_id":"<val>","members.uid":"<val>"}}',
+            'namespace': 'mobapi.teams',
+            'recommendation': {
+                'index': '{"_id": 1, "members.uid": 1}',
+                'namespace': 'mobapi.teams',
+                'shellCommand': 'db["teams"].ensureIndex({"_id": 1, "members.uid": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 1,
+                'totalTimeMillis': 26,
+                'avgTimeMillis': 26
+            }
+        },
+        {
+            'queryMask': '{"$orderby":{"created":-1},"$query":{"to":"<val>"}}',
+            'namespace': 'mobapi.notificationmappings',
+            'recommendation': {
+                'index': '{"to": 1, "created": 1}',
+                'namespace': 'mobapi.notificationmappings',
+                'shellCommand': 'db["notificationmappings"].ensureIndex({"to": 1, "created": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 1,
+                'totalTimeMillis': 26,
+                'avgTimeMillis': 26
+            }
+        },
+        {
+            'queryMask': '{"$query":{"stream_id":"<val>"}}',
+            'namespace': 'mobapi.spamstreams',
+            'recommendation': {
+                'index': '{"stream_id": 1}',
+                'namespace': 'mobapi.spamstreams',
+                'shellCommand': 'db["spamstreams"].ensureIndex({"stream_id": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 1,
+                'totalTimeMillis': 25,
+                'avgTimeMillis': 25
+            }
+        },
+        {
+            'queryMask': '{"$query":{"companiesfan.cid":"<val>"}}',
+            'namespace': 'mobapi.users',
+            'recommendation': {
+                'index': '{"companiesfan.cid": 1}',
+                'namespace': 'mobapi.users',
+                'shellCommand': 'db["users"].ensureIndex({"companiesfan.cid": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 1,
+                'totalTimeMillis': 24,
+                'avgTimeMillis': 24
+            }
+        },
+        {
+            'queryMask': '{"$orderby":{"created":-1},"$query":{"members.uid":"<val>"}}',
+            'namespace': 'mobapi.groups',
+            'recommendation': {
+                'index': '{"members.uid": 1, "created": 1}',
+                'namespace': 'mobapi.groups',
+                'shellCommand': 'db["groups"].ensureIndex({"members.uid": 1, "created": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 1,
+                'totalTimeMillis': 23,
+                'avgTimeMillis': 23
+            }
+        },
+        {
+            'queryMask': '{"$query":{"_id":"<val>","companiesmember.status":"<val>"}}',
+            'namespace': 'mobapi.users',
+            'recommendation': {
+                'index': '{"_id": 1, "companiesmember.status": 1}',
+                'namespace': 'mobapi.users',
+                'shellCommand': 'db["users"].ensureIndex({"_id": 1, "companiesmember.status": 1}, {"background": true})'
+            },
+            'details': {
+                'count': 1,
+                'totalTimeMillis': 20,
+                'avgTimeMillis': 20
+            }
+        }
+    ]
+}

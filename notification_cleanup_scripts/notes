@@ -1,0 +1,118 @@
+
+# for 86 server indexes :
+
+db["images"].ensureIndex({"ref_id": 1, "_id": 1, "imagepath": 1, "colors": 1, "options": 1}, {"background": true})
+
+db["queue_images"].ensureIndex({"qatool_uid": 1, "qatool_flag": 1}, {"background": true})
+
+db["searches"].ensureIndex({"_id": 1, "ref_id": 1, "type": 1, "name": 1, "url": 1, "scope": 1, "status": 1, "created": 1}, {"background": true})
+
+db["notifications"].ensureIndex({"to": 1, "created": 1}, {"background": true})
+
+db["queue_compaddresses"].ensureIndex({"uid": 1, "qatool_uid": 1, "qatool_flag": 1, "flag": 1, "urlname": 1, "logo": 1}, {"background": true})
+
+db["companies"].ensureIndex({"url": 1, "modified": 1, "logo": 1, "_id": 1, "created": 1}, {"background": true})
+
+db["groups"].ensureIndex({"_id": 1, "members.role": 1, "members.uid": 1, "created": 1, "groupurl": 1}, {"background": true})
+
+db["users"].ensureIndex({"status": 1, "created": 1, "featured": 1, "followers": 1, "twitter.twid": 1}, {"background": true})
+
+
+db["activitylogs"].ensureIndex({"created": 1, "user_id": 1}, {"background": true})
+
+db["categories"].ensureIndex({"_pid": 1, "created": 1, "status": 1}, {"background": true})
+
+db["notificationmappings"].ensureIndex({"ref_id": 1, "to": 1, "action": 1, "_id": 1}, {"background": true})
+
+db["passwordtokens"].ensureIndex({"_id": 1, "email": 1, "passwordtoken": 1, "teamid": 1}, {"background": true})
+
+db["homepagestreams"].ensureIndex({"position": 1}, {"background": true});
+
+db["queue_coverdetailsLIVE"].ensureIndex({"facebookimg": 1, "facebook": 1}, {"background": true});
+"errmsg" : "Btree::insert: key too large to index, failing mobapi.queue_coverdetailsLIVE.$facebookimg_1_facebook_1 1220 { : \"\", : \"https://www.facebook.com/login.php?api_key=127760087237610&skip_api_login=1&display=popup&social_plugin_action=like&social_plugin=like&next=https%3A%2...\" }",
+	"code" : 17280
+
+
+
+db["activitylogs"].ensureIndex({"_id": 1, "user_id": 1, "name": 1, "user_cid": 1, "user_image": 1, "data": 1, "type": 1, "stream_id": 1, "created": 1, "group_id": 1, "username": 1}, {"background": true});
+
+
+
+
+========================================================================================================================
+
+
+
+
+
+db["images"].ensureIndex({"ref_id": 1, "options": 1}, {"background": true})
+
+db["searches"].ensureIndex({"ref_id": 1, "type": 1}, {"background": true})
+
+db["notifications"].ensureIndex({"to": 1, "created": 1}, {"background": true})
+
+db["queue_compaddresses"].ensureIndex({"qatool_uid": 1, "qatool_flag": 1, "flag": 1}, {"background": true})
+
+db["companies"].ensureIndex({"url": 1}, {"background": true})
+
+db["companies"].ensureIndex({"modified": 1}, {"background": true})
+
+db["queue_compaddresses"].ensureIndex({"qatool_uid": 1, "qatool_flag": 1}, {"background": true})
+
+db["groups"].ensureIndex({"members.uid": 1, "created": 1}, {"background": true})
+
+db["searches"].ensureIndex({"ref_id": 1}, {"background": true})
+
+db["users"].ensureIndex({"status": 1, "created": 1}, {"background": true})
+
+db["queue_compaddresses"].ensureIndex({"urlname": 1}, {"background": true})
+
+db["queue_compaddresses"].ensureIndex({"qatool_uid": 1, "qatool_flag": 1, "logo": 1}, {"background": true})
+
+db["notifications"].ensureIndex({"to": 1}, {"background": true})
+
+db["queue_compaddresses"].ensureIndex({"uid": 1}, {"background": true})
+
+db["queue_compaddresses"].ensureIndex({"urlname": 1}, {"background": true})
+
+db["activitylogs"].ensureIndex({"created": 1, "user_id": 1}, {"background": true})
+
+db["categories"].ensureIndex({"_pid": 1, "created": 1}, {"background": true})
+
+db["groups"].ensureIndex({"groupurl": 1}, {"background": true})
+
+db["categories"].ensureIndex({"_pid": 1, "category": 1, "status": 1}, {"background": true})
+
+db["notifications_copy"].ensureIndex({"to": 1, "created": 1}, {"background": true})
+
+db["queue_images"].ensureIndex({"qatool_uid": 1, "qatool_flag": 1}, {"background": true})
+
+db["users"].ensureIndex({"status": 1, "featured": 1, "followers": 1}, {"background": true})
+
+db["groups"].ensureIndex({"_id": 1, "members.role": 1}, {"background": true})
+
+db["notificationmappings"].ensureIndex({"ref_id": 1, "to": 1, "action": 1, "_id": 1}, {"background": true})
+
+db["users"].ensureIndex({"twitter.twid": 1}, {"background": true})
+
+db["companies"].ensureIndex({"logo": 1}, {"background": true})
+
+db["notifications_copy"].ensureIndex({"54940fbbc0e855614b7b23c8": 1, "54917b26bbe85511237b23c9": 1, "549d2f54c0e8550a287b23c9": 1, "54916c3fc0e855fd727b23c6": 1, "5491612fc0e855156f7b23c6": 1, "54916152c0e855e0687b23c7": 1, "54918257bbe855b3237b23c6": 1, "548574f2bce855b02d7b23c8": 1, "54940c38c0e8553d4a7b23c6": 1, "54940cf6c0e855754b7b23c8": 1, "549d30dac0e8551d2a7b23c7": 1, "5494128d4afa55f80d7b23c6": 1, "54916c21c0e855946f7b23c6": 1, "5491583cbbe855051d7b23ca": 1, "54819e3067fa557f1f7b23c6": 1, "54915c6dbbe8551f1d7b23cf": 1, "54857522bce855c8377b23c8": 1, "549160d6c0e855e0687b23c6": 1, "54915bfabbe8557f1e7b23ca": 1, "549d279dc0e8554b247b23c7": 1, "54916102c0e8556c6e7b23c6": 1, "549803e4bde855b8137b23c6": 1, "548fcee7c0e8555f2c7b23c7": 1, "549d2b84c0e8550a287b23c7": 1, "549265b9bbe855760e7b23c6": 1, "548044392bf65566187b23c7": 1, "549d2897c0e855d1247b23c7": 1, "54958df4c0e8552b0f7b23c8": 1, "549587ddc0e8551e0d7b23ca": 1, "54915840bbe855c61b7b23ca": 1, "54805d312bf65566187b23cb": 1, "549582d64afa55a2077b23c7": 1, "54958af5c0e85591157b23c8": 1, "5491583fbbe855081d7b23ca": 1, "54915f7bc0e8554a6c7b23c6": 1, "54915dd4c0e85585677b23c6": 1, "5485777fbce85593377b23c8": 1, "54940c43c0e8551a4b7b23c8": 1, "5495848c4afa5553087b23c7": 1, "54916be5c0e8556c6e7b23c7": 1, "549130fcbbe855ef177b23c8": 1, "549d2c23c0e85518287b23c7": 1, "54958eabc0e855730c7b23ca": 1, "548044482bf65563187b23c7": 1, "54958b4bc0e8556d0f7b23cb": 1, "54941096c0e855134c7b23c8": 1, "5491583ebbe855941c7b23ca": 1, "54a26e5cbde855de157b23c9": 1, "5491583fbbe8551f1d7b23ca": 1, "54958e5ac0e855a70c7b23cc": 1, "549d26f9c0e8555e247b23c7": 1, "549d2f77c0e85511287b23c7": 1}, {"background": true})
+
+db["passwordtokens"].ensureIndex({"_id": 1, "email": 1, "passwordtoken": 1, "teamid": 1}, {"background": true})
+
+db["homepagestreams"].ensureIndex({"position": 1}, {"background": true})
+
+db["companies"].ensureIndex({"_id": 1, "created": 1}, {"background": true})
+
+db["queue_coverdetailsLIVE"].ensureIndex({"facebookimg": 1, "facebook": 1}, {"background": true})
+
+db["activitylogs"].ensureIndex({"_id": 1, "user_id": 1, "name": 1, "user_cid": 1, "user_image": 1, "data": 1, "type": 1, "stream_id": 1, "created": 1, "group_id": 1, "username": 1}, {"background": true})
+
+db["searches"].ensureIndex({"_id": 1, "ref_id": 1, "name": 1, "url": 1, "type": 1, "scope": 1, "status": 1, "created": 1}, {"background": true})
+
+db["images"].ensureIndex({"_id": 1, "ref_id": 1, "imagepath": 1, "colors": 1, "options": 1}, {"background": true})
+
+[stonex@localhost notification_cleanup_scripts]$ ^C
+[stonex@localhost notification_cleanup_scripts]$ ^C
+[stonex@localhost notification_cleanup_scripts]$

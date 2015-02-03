@@ -1,0 +1,655 @@
+{
+    "runStats": {
+        "linesRecommended": 1251,
+        "linesProcessed": 80760,
+        "linesPassed": 684375
+    }, 
+    "results": [
+        {
+            "queryMask": "{\"$query\":{\"created\":{\"$lte\":\"<val>\"},\"to\":\"<val>\"}}",
+            "namespace": "mobapi.notification_live_copy",
+            "recommendation": {
+                "index": "{\"to\": 1, \"created\": 1}",
+                "namespace": "mobapi.notification_live_copy",
+                "shellCommand": "db[\"notification_live_copy\"].ensureIndex({\"to\": 1, \"created\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 314,
+                "totalTimeMillis": 2661574,
+                "avgTimeMillis": 8476
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":[],\"$query\":{\"options\":\"<val>\",\"ref_id\":\"<val>\"}}",
+            "namespace": "mobapi.images",
+            "recommendation": {
+                "index": "{\"ref_id\": 1, \"options\": 1}",
+                "namespace": "mobapi.images",
+                "shellCommand": "db[\"images\"].ensureIndex({\"ref_id\": 1, \"options\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 379,
+                "totalTimeMillis": 212922,
+                "avgTimeMillis": 561
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":[],\"$query\":{\"ref_id\":\"<val>\",\"type\":\"<val>\"}}",
+            "namespace": "mobapi.searches",
+            "recommendation": {
+                "index": "{\"ref_id\": 1, \"type\": 1}",
+                "namespace": "mobapi.searches",
+                "shellCommand": "db[\"searches\"].ensureIndex({\"ref_id\": 1, \"type\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 280,
+                "totalTimeMillis": 113255,
+                "avgTimeMillis": 404
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"username\":\"<val>\"}}",
+            "namespace": "mobapi.notification_live_copy",
+            "recommendation": {
+                "index": "{\"username\": 1}",
+                "namespace": "mobapi.notification_live_copy",
+                "shellCommand": "db[\"notification_live_copy\"].ensureIndex({\"username\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 1,
+                "totalTimeMillis": 74113,
+                "avgTimeMillis": 74113
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"created\":-1},\"$query\":{\"to\":\"<val>\"}}",
+            "namespace": "mobapi.notifications",
+            "recommendation": {
+                "index": "{\"to\": 1, \"created\": 1}",
+                "namespace": "mobapi.notifications",
+                "shellCommand": "db[\"notifications\"].ensureIndex({\"to\": 1, \"created\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 45,
+                "totalTimeMillis": 23613,
+                "avgTimeMillis": 524
+            }
+        }, 
+
+
+        {
+            "queryMask": "{\"$orderby\":{\"flag\":-1},\"$query\":{\"qatool_flag\":\"<val>\",\"qatool_uid\":\"<val>\"}}",
+            "namespace": "mobapi.queue_compaddresses",
+            "recommendation": {
+                "index": "{\"qatool_uid\": 1, \"qatool_flag\": 1, \"flag\": 1}",
+                "namespace": "mobapi.queue_compaddresses",
+                "shellCommand": "db[\"queue_compaddresses\"].ensureIndex({\"qatool_uid\": 1, \"qatool_flag\": 1, \"flag\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 35,
+                "totalTimeMillis": 17349,
+                "avgTimeMillis": 495
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"url\":\"<val>\"}}",
+            "namespace": "mobapi.companies",
+            "recommendation": {
+                "index": "{\"url\": 1}",
+                "namespace": "mobapi.companies",
+                "shellCommand": "db[\"companies\"].ensureIndex({\"url\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 1,
+                "totalTimeMillis": 11111,
+                "avgTimeMillis": 11111
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"modified\":-1},\"$query\":{}}",
+            "namespace": "mobapi.companies",
+            "recommendation": {
+                "index": "{\"modified\": 1}",
+                "namespace": "mobapi.companies",
+                "shellCommand": "db[\"companies\"].ensureIndex({\"modified\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 1,
+                "totalTimeMillis": 10993,
+                "avgTimeMillis": 10993
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"qatool_flag\":\"<val>\",\"qatool_uid\":\"<val>\"}}",
+            "namespace": "mobapi.queue_compaddresses",
+            "recommendation": {
+                "index": "{\"qatool_uid\": 1, \"qatool_flag\": 1}",
+                "namespace": "mobapi.queue_compaddresses",
+                "shellCommand": "db[\"queue_compaddresses\"].ensureIndex({\"qatool_uid\": 1, \"qatool_flag\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 12,
+                "totalTimeMillis": 10224,
+                "avgTimeMillis": 852
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"created\":-1},\"$query\":{\"members.uid\":\"<val>\"}}",
+            "namespace": "mobapi.groups",
+            "recommendation": {
+                "index": "{\"members.uid\": 1, \"created\": 1}",
+                "namespace": "mobapi.groups",
+                "shellCommand": "db[\"groups\"].ensureIndex({\"members.uid\": 1, \"created\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 20,
+                "totalTimeMillis": 7412,
+                "avgTimeMillis": 370
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":[],\"$query\":{\"ref_id\":\"<val>\"}}",
+            "namespace": "mobapi.searches",
+            "recommendation": {
+                "index": "{\"ref_id\": 1}",
+                "namespace": "mobapi.searches",
+                "shellCommand": "db[\"searches\"].ensureIndex({\"ref_id\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 2,
+                "totalTimeMillis": 6497,
+                "avgTimeMillis": 3248
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"created\":1},\"$query\":{\"status\":\"<val>\"}}",
+            "namespace": "mobapi.users",
+            "recommendation": {
+                "index": "{\"status\": 1, \"created\": 1}",
+                "namespace": "mobapi.users",
+                "shellCommand": "db[\"users\"].ensureIndex({\"status\": 1, \"created\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 3,
+                "totalTimeMillis": 4281,
+                "avgTimeMillis": 1427
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"urlname\":\"<val>\"}}",
+            "namespace": "mobapi.queue_compaddresses",
+            "recommendation": {
+                "index": "{\"urlname\": 1}",
+                "namespace": "mobapi.queue_compaddresses",
+                "shellCommand": "db[\"queue_compaddresses\"].ensureIndex({\"urlname\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 9,
+                "totalTimeMillis": 4158,
+                "avgTimeMillis": 462
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"logo\":-1},\"$query\":{\"qatool_flag\":\"<val>\",\"qatool_uid\":\"<val>\"}}",
+            "namespace": "mobapi.queue_compaddresses",
+            "recommendation": {
+                "index": "{\"qatool_uid\": 1, \"qatool_flag\": 1, \"logo\": 1}",
+                "namespace": "mobapi.queue_compaddresses",
+                "shellCommand": "db[\"queue_compaddresses\"].ensureIndex({\"qatool_uid\": 1, \"qatool_flag\": 1, \"logo\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 7,
+                "totalTimeMillis": 3514,
+                "avgTimeMillis": 502
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"to\":\"<val>\"}}",
+            "namespace": "mobapi.notifications",
+            "recommendation": {
+                "index": "{\"to\": 1}",
+                "namespace": "mobapi.notifications",
+                "shellCommand": "db[\"notifications\"].ensureIndex({\"to\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 7,
+                "totalTimeMillis": 2996,
+                "avgTimeMillis": 428
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"uid\":{\"$ne\":\"<val>\"}}}",
+            "namespace": "mobapi.queue_compaddresses",
+            "recommendation": {
+                "index": "{\"uid\": 1}",
+                "namespace": "mobapi.queue_compaddresses",
+                "shellCommand": "db[\"queue_compaddresses\"].ensureIndex({\"uid\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 1,
+                "totalTimeMillis": 2974,
+                "avgTimeMillis": 2974
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":[],\"$query\":{\"urlname\":\"<val>\"}}",
+            "namespace": "mobapi.queue_compaddresses",
+            "recommendation": {
+                "index": "{\"urlname\": 1}",
+                "namespace": "mobapi.queue_compaddresses",
+                "shellCommand": "db[\"queue_compaddresses\"].ensureIndex({\"urlname\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 12,
+                "totalTimeMillis": 2497,
+                "avgTimeMillis": 208
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"created\":-1},\"$query\":{\"user_id\":{\"$ne\":\"<val>\"}}}",
+            "namespace": "mobapi.activitylogs",
+            "recommendation": {
+                "index": "{\"created\": 1, \"user_id\": 1}",
+                "namespace": "mobapi.activitylogs",
+                "shellCommand": "db[\"activitylogs\"].ensureIndex({\"created\": 1, \"user_id\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 8,
+                "totalTimeMillis": 2384,
+                "avgTimeMillis": 298
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"created\":-1},\"$query\":{\"_pid\":\"<val>\"}}",
+            "namespace": "mobapi.categories",
+            "recommendation": {
+                "index": "{\"_pid\": 1, \"created\": 1}",
+                "namespace": "mobapi.categories",
+                "shellCommand": "db[\"categories\"].ensureIndex({\"_pid\": 1, \"created\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 6,
+                "totalTimeMillis": 2302,
+                "avgTimeMillis": 383
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":[],\"$query\":{\"groupurl\":\"<val>\"}}",
+            "namespace": "mobapi.groups",
+            "recommendation": {
+                "index": "{\"groupurl\": 1}",
+                "namespace": "mobapi.groups",
+                "shellCommand": "db[\"groups\"].ensureIndex({\"groupurl\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 5,
+                "totalTimeMillis": 2282,
+                "avgTimeMillis": 456
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"category\":1},\"$query\":{\"_pid\":\"<val>\",\"status\":{\"$in\":[]}}}",
+            "namespace": "mobapi.categories",
+            "recommendation": {
+                "index": "{\"_pid\": 1, \"category\": 1, \"status\": 1}",
+                "namespace": "mobapi.categories",
+                "shellCommand": "db[\"categories\"].ensureIndex({\"_pid\": 1, \"category\": 1, \"status\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 6,
+                "totalTimeMillis": 2107,
+                "avgTimeMillis": 351
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"created\":1},\"$query\":{\"to\":\"<val>\"}}",
+            "namespace": "mobapi.notifications_copy",
+            "recommendation": {
+                "index": "{\"to\": 1, \"created\": 1}",
+                "namespace": "mobapi.notifications_copy",
+                "shellCommand": "db[\"notifications_copy\"].ensureIndex({\"to\": 1, \"created\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 2,
+                "totalTimeMillis": 1174,
+                "avgTimeMillis": 587
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"qatool_flag\":\"<val>\",\"qatool_uid\":\"<val>\"}}",
+            "namespace": "mobapi.queue_images",
+            "recommendation": {
+                "index": "{\"qatool_uid\": 1, \"qatool_flag\": 1}",
+                "namespace": "mobapi.queue_images",
+                "shellCommand": "db[\"queue_images\"].ensureIndex({\"qatool_uid\": 1, \"qatool_flag\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 11,
+                "totalTimeMillis": 1051,
+                "avgTimeMillis": 95
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"followers\":-1},\"$query\":{\"featured\":\"<val>\",\"status\":\"<val>\"}}",
+            "namespace": "mobapi.users",
+            "recommendation": {
+                "index": "{\"status\": 1, \"featured\": 1, \"followers\": 1}",
+                "namespace": "mobapi.users",
+                "shellCommand": "db[\"users\"].ensureIndex({\"status\": 1, \"featured\": 1, \"followers\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 5,
+                "totalTimeMillis": 1035,
+                "avgTimeMillis": 207
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"_id\":\"<val>\",\"members.role\":\"<val>\"}}",
+            "namespace": "mobapi.groups",
+            "recommendation": {
+                "index": "{\"_id\": 1, \"members.role\": 1}",
+                "namespace": "mobapi.groups",
+                "shellCommand": "db[\"groups\"].ensureIndex({\"_id\": 1, \"members.role\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 2,
+                "totalTimeMillis": 985,
+                "avgTimeMillis": 492
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"_id\":\"<val>\",\"companiesfan_count\":\"<val>\",\"follow_count\":\"<val>\",\"follower_count\":\"<val>\"}}",
+            "namespace": "mobapi.user_protfolios",
+            "recommendation": {
+                "index": "{\"_id\": 1, \"follower_count\": 1, \"follow_count\": 1, \"companiesfan_count\": 1}",
+                "namespace": "mobapi.user_protfolios",
+                "shellCommand": "db[\"user_protfolios\"].ensureIndex({\"_id\": 1, \"follower_count\": 1, \"follow_count\": 1, \"companiesfan_count\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 25,
+                "totalTimeMillis": 963,
+                "avgTimeMillis": 38
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"_id\":\"<val>\",\"action\":\"<val>\",\"ref_id\":\"<val>\",\"to\":\"<val>\"}}",
+            "namespace": "mobapi.notificationmappings",
+            "recommendation": {
+                "index": "{\"ref_id\": 1, \"to\": 1, \"action\": 1, \"_id\": 1}",
+                "namespace": "mobapi.notificationmappings",
+                "shellCommand": "db[\"notificationmappings\"].ensureIndex({\"ref_id\": 1, \"to\": 1, \"action\": 1, \"_id\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 11,
+                "totalTimeMillis": 655,
+                "avgTimeMillis": 59
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":[],\"$query\":{\"twitter.twid\":\"<val>\"}}",
+            "namespace": "mobapi.users",
+            "recommendation": {
+                "index": "{\"twitter.twid\": 1}",
+                "namespace": "mobapi.users",
+                "shellCommand": "db[\"users\"].ensureIndex({\"twitter.twid\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 2,
+                "totalTimeMillis": 614,
+                "avgTimeMillis": 307
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"logo\":{\"$ne\":\"<val>\"}}}",
+            "namespace": "mobapi.companies",
+            "recommendation": {
+                "index": "{\"logo\": 1}",
+                "namespace": "mobapi.companies",
+                "shellCommand": "db[\"companies\"].ensureIndex({\"logo\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 1,
+                "totalTimeMillis": 599,
+                "avgTimeMillis": 599
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"548044392bf65566187b23c7\":\"<val>\",\"548044482bf65563187b23c7\":\"<val>\",\"54805d312bf65566187b23cb\":\"<val>\",\"54819e3067fa557f1f7b23c6\":\"<val>\",\"548574f2bce855b02d7b23c8\":\"<val>\",\"54857522bce855c8377b23c8\":\"<val>\",\"5485777fbce85593377b23c8\":\"<val>\",\"548fcee7c0e8555f2c7b23c7\":\"<val>\",\"549130fcbbe855ef177b23c8\":\"<val>\",\"5491583cbbe855051d7b23ca\":\"<val>\",\"5491583ebbe855941c7b23ca\":\"<val>\",\"5491583fbbe855081d7b23ca\":\"<val>\",\"5491583fbbe8551f1d7b23ca\":\"<val>\",\"54915840bbe855c61b7b23ca\":\"<val>\",\"54915bfabbe8557f1e7b23ca\":\"<val>\",\"54915c6dbbe8551f1d7b23cf\":\"<val>\",\"54915dd4c0e85585677b23c6\":\"<val>\",\"54915f7bc0e8554a6c7b23c6\":\"<val>\",\"549160d6c0e855e0687b23c6\":\"<val>\",\"54916102c0e8556c6e7b23c6\":\"<val>\",\"5491612fc0e855156f7b23c6\":\"<val>\",\"54916152c0e855e0687b23c7\":\"<val>\",\"54916be5c0e8556c6e7b23c7\":\"<val>\",\"54916c21c0e855946f7b23c6\":\"<val>\",\"54916c3fc0e855fd727b23c6\":\"<val>\",\"54917b26bbe85511237b23c9\":\"<val>\",\"54918257bbe855b3237b23c6\":\"<val>\",\"549265b9bbe855760e7b23c6\":\"<val>\",\"54940c38c0e8553d4a7b23c6\":\"<val>\",\"54940c43c0e8551a4b7b23c8\":\"<val>\",\"54940cf6c0e855754b7b23c8\":\"<val>\",\"54940fbbc0e855614b7b23c8\":\"<val>\",\"54941096c0e855134c7b23c8\":\"<val>\",\"5494128d4afa55f80d7b23c6\":\"<val>\",\"549582d64afa55a2077b23c7\":\"<val>\",\"5495848c4afa5553087b23c7\":\"<val>\",\"549587ddc0e8551e0d7b23ca\":\"<val>\",\"54958af5c0e85591157b23c8\":\"<val>\",\"54958b4bc0e8556d0f7b23cb\":\"<val>\",\"54958df4c0e8552b0f7b23c8\":\"<val>\",\"54958e5ac0e855a70c7b23cc\":\"<val>\",\"54958eabc0e855730c7b23ca\":\"<val>\",\"549803e4bde855b8137b23c6\":\"<val>\",\"549d26f9c0e8555e247b23c7\":\"<val>\",\"549d279dc0e8554b247b23c7\":\"<val>\",\"549d2897c0e855d1247b23c7\":\"<val>\",\"549d2b84c0e8550a287b23c7\":\"<val>\",\"549d2c23c0e85518287b23c7\":\"<val>\",\"549d2f54c0e8550a287b23c9\":\"<val>\",\"549d2f77c0e85511287b23c7\":\"<val>\",\"549d30dac0e8551d2a7b23c7\":\"<val>\",\"54a26e5cbde855de157b23c9\":\"<val>\"}}",
+            "namespace": "mobapi.notifications_copy",
+            "recommendation": {
+                "index": "{\"54940fbbc0e855614b7b23c8\": 1, \"54917b26bbe85511237b23c9\": 1, \"549d2f54c0e8550a287b23c9\": 1, \"54916c3fc0e855fd727b23c6\": 1, \"5491612fc0e855156f7b23c6\": 1, \"54916152c0e855e0687b23c7\": 1, \"54918257bbe855b3237b23c6\": 1, \"548574f2bce855b02d7b23c8\": 1, \"54940c38c0e8553d4a7b23c6\": 1, \"54940cf6c0e855754b7b23c8\": 1, \"549d30dac0e8551d2a7b23c7\": 1, \"5494128d4afa55f80d7b23c6\": 1, \"54916c21c0e855946f7b23c6\": 1, \"5491583cbbe855051d7b23ca\": 1, \"54819e3067fa557f1f7b23c6\": 1, \"54915c6dbbe8551f1d7b23cf\": 1, \"54857522bce855c8377b23c8\": 1, \"549160d6c0e855e0687b23c6\": 1, \"54915bfabbe8557f1e7b23ca\": 1, \"549d279dc0e8554b247b23c7\": 1, \"54916102c0e8556c6e7b23c6\": 1, \"549803e4bde855b8137b23c6\": 1, \"548fcee7c0e8555f2c7b23c7\": 1, \"549d2b84c0e8550a287b23c7\": 1, \"549265b9bbe855760e7b23c6\": 1, \"548044392bf65566187b23c7\": 1, \"549d2897c0e855d1247b23c7\": 1, \"54958df4c0e8552b0f7b23c8\": 1, \"549587ddc0e8551e0d7b23ca\": 1, \"54915840bbe855c61b7b23ca\": 1, \"54805d312bf65566187b23cb\": 1, \"549582d64afa55a2077b23c7\": 1, \"54958af5c0e85591157b23c8\": 1, \"5491583fbbe855081d7b23ca\": 1, \"54915f7bc0e8554a6c7b23c6\": 1, \"54915dd4c0e85585677b23c6\": 1, \"5485777fbce85593377b23c8\": 1, \"54940c43c0e8551a4b7b23c8\": 1, \"5495848c4afa5553087b23c7\": 1, \"54916be5c0e8556c6e7b23c7\": 1, \"549130fcbbe855ef177b23c8\": 1, \"549d2c23c0e85518287b23c7\": 1, \"54958eabc0e855730c7b23ca\": 1, \"548044482bf65563187b23c7\": 1, \"54958b4bc0e8556d0f7b23cb\": 1, \"54941096c0e855134c7b23c8\": 1, \"5491583ebbe855941c7b23ca\": 1, \"54a26e5cbde855de157b23c9\": 1, \"5491583fbbe8551f1d7b23ca\": 1, \"54958e5ac0e855a70c7b23cc\": 1, \"549d26f9c0e8555e247b23c7\": 1, \"549d2f77c0e85511287b23c7\": 1}",
+                "namespace": "mobapi.notifications_copy",
+                "shellCommand": "db[\"notifications_copy\"].ensureIndex({\"54940fbbc0e855614b7b23c8\": 1, \"54917b26bbe85511237b23c9\": 1, \"549d2f54c0e8550a287b23c9\": 1, \"54916c3fc0e855fd727b23c6\": 1, \"5491612fc0e855156f7b23c6\": 1, \"54916152c0e855e0687b23c7\": 1, \"54918257bbe855b3237b23c6\": 1, \"548574f2bce855b02d7b23c8\": 1, \"54940c38c0e8553d4a7b23c6\": 1, \"54940cf6c0e855754b7b23c8\": 1, \"549d30dac0e8551d2a7b23c7\": 1, \"5494128d4afa55f80d7b23c6\": 1, \"54916c21c0e855946f7b23c6\": 1, \"5491583cbbe855051d7b23ca\": 1, \"54819e3067fa557f1f7b23c6\": 1, \"54915c6dbbe8551f1d7b23cf\": 1, \"54857522bce855c8377b23c8\": 1, \"549160d6c0e855e0687b23c6\": 1, \"54915bfabbe8557f1e7b23ca\": 1, \"549d279dc0e8554b247b23c7\": 1, \"54916102c0e8556c6e7b23c6\": 1, \"549803e4bde855b8137b23c6\": 1, \"548fcee7c0e8555f2c7b23c7\": 1, \"549d2b84c0e8550a287b23c7\": 1, \"549265b9bbe855760e7b23c6\": 1, \"548044392bf65566187b23c7\": 1, \"549d2897c0e855d1247b23c7\": 1, \"54958df4c0e8552b0f7b23c8\": 1, \"549587ddc0e8551e0d7b23ca\": 1, \"54915840bbe855c61b7b23ca\": 1, \"54805d312bf65566187b23cb\": 1, \"549582d64afa55a2077b23c7\": 1, \"54958af5c0e85591157b23c8\": 1, \"5491583fbbe855081d7b23ca\": 1, \"54915f7bc0e8554a6c7b23c6\": 1, \"54915dd4c0e85585677b23c6\": 1, \"5485777fbce85593377b23c8\": 1, \"54940c43c0e8551a4b7b23c8\": 1, \"5495848c4afa5553087b23c7\": 1, \"54916be5c0e8556c6e7b23c7\": 1, \"549130fcbbe855ef177b23c8\": 1, \"549d2c23c0e85518287b23c7\": 1, \"54958eabc0e855730c7b23ca\": 1, \"548044482bf65563187b23c7\": 1, \"54958b4bc0e8556d0f7b23cb\": 1, \"54941096c0e855134c7b23c8\": 1, \"5491583ebbe855941c7b23ca\": 1, \"54a26e5cbde855de157b23c9\": 1, \"5491583fbbe8551f1d7b23ca\": 1, \"54958e5ac0e855a70c7b23cc\": 1, \"549d26f9c0e8555e247b23c7\": 1, \"549d2f77c0e85511287b23c7\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 1,
+                "totalTimeMillis": 506,
+                "avgTimeMillis": 506
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"_id\":\"<val>\",\"email\":\"<val>\",\"passwordtoken\":\"<val>\",\"teamid\":\"<val>\"}}",
+            "namespace": "mobapi.passwordtokens",
+            "recommendation": {
+                "index": "{\"_id\": 1, \"email\": 1, \"passwordtoken\": 1, \"teamid\": 1}",
+                "namespace": "mobapi.passwordtokens",
+                "shellCommand": "db[\"passwordtokens\"].ensureIndex({\"_id\": 1, \"email\": 1, \"passwordtoken\": 1, \"teamid\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 5,
+                "totalTimeMillis": 459,
+                "avgTimeMillis": 91
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"_id\":\"<val>\",\"companiesfan_count\":\"<val>\",\"follow_count\":\"<val>\",\"follower_count\":\"<val>\",\"username\":\"<val>\"}}",
+            "namespace": "mobapi.user_protfolios",
+            "recommendation": {
+                "index": "{\"_id\": 1, \"username\": 1, \"follow_count\": 1, \"companiesfan_count\": 1, \"follower_count\": 1}",
+                "namespace": "mobapi.user_protfolios",
+                "shellCommand": "db[\"user_protfolios\"].ensureIndex({\"_id\": 1, \"username\": 1, \"follow_count\": 1, \"companiesfan_count\": 1, \"follower_count\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 8,
+                "totalTimeMillis": 319,
+                "avgTimeMillis": 39
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"position\":1},\"$query\":{}}",
+            "namespace": "mobapi.homepagestreams",
+            "recommendation": {
+                "index": "{\"position\": 1}",
+                "namespace": "mobapi.homepagestreams",
+                "shellCommand": "db[\"homepagestreams\"].ensureIndex({\"position\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 4,
+                "totalTimeMillis": 230,
+                "avgTimeMillis": 57
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"created\":-1},\"$query\":{\"_id\":\"<val>\"}}",
+            "namespace": "mobapi.companies",
+            "recommendation": {
+                "index": "{\"_id\": 1, \"created\": 1}",
+                "namespace": "mobapi.companies",
+                "shellCommand": "db[\"companies\"].ensureIndex({\"_id\": 1, \"created\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 1,
+                "totalTimeMillis": 150,
+                "avgTimeMillis": 150
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"_id\":\"<val>\",\"created\":\"<val>\",\"scope\":\"<val>\",\"source_type\":\"<val>\",\"status\":\"<val>\",\"stream_id\":\"<val>\",\"stream_type\":\"<val>\",\"type\":\"<val>\",\"user_id\":\"<val>\"}}",
+            "namespace": "mobapi.userstreams",
+            "recommendation": {
+                "index": "{\"_id\": 1, \"stream_id\": 1, \"user_id\": 1, \"stream_type\": 1, \"created\": 1, \"source_type\": 1, \"scope\": 1, \"status\": 1, \"type\": 1}",
+                "namespace": "mobapi.userstreams",
+                "shellCommand": "db[\"userstreams\"].ensureIndex({\"_id\": 1, \"stream_id\": 1, \"user_id\": 1, \"stream_type\": 1, \"created\": 1, \"source_type\": 1, \"scope\": 1, \"status\": 1, \"type\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 3,
+                "totalTimeMillis": 146,
+                "avgTimeMillis": 48
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"facebook\":{\"$ne\":\"<val>\"},\"facebookimg\":\"<val>\"}}",
+            "namespace": "mobapi.queue_coverdetailsLIVE",
+            "recommendation": {
+                "index": "{\"facebookimg\": 1, \"facebook\": 1}",
+                "namespace": "mobapi.queue_coverdetailsLIVE",
+                "shellCommand": "db[\"queue_coverdetailsLIVE\"].ensureIndex({\"facebookimg\": 1, \"facebook\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 1,
+                "totalTimeMillis": 141,
+                "avgTimeMillis": 141
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"_id\":\"<val>\",\"created\":\"<val>\",\"data\":\"<val>\",\"group_id\":\"<val>\",\"name\":\"<val>\",\"stream_id\":\"<val>\",\"type\":\"<val>\",\"user_cid\":\"<val>\",\"user_id\":\"<val>\",\"user_image\":\"<val>\",\"username\":\"<val>\"}}",
+            "namespace": "mobapi.activitylogs",
+            "recommendation": {
+                "index": "{\"_id\": 1, \"user_id\": 1, \"name\": 1, \"user_cid\": 1, \"user_image\": 1, \"data\": 1, \"type\": 1, \"stream_id\": 1, \"created\": 1, \"group_id\": 1, \"username\": 1}",
+                "namespace": "mobapi.activitylogs",
+                "shellCommand": "db[\"activitylogs\"].ensureIndex({\"_id\": 1, \"user_id\": 1, \"name\": 1, \"user_cid\": 1, \"user_image\": 1, \"data\": 1, \"type\": 1, \"stream_id\": 1, \"created\": 1, \"group_id\": 1, \"username\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 2,
+                "totalTimeMillis": 135,
+                "avgTimeMillis": 67
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"_id\":\"<val>\",\"created\":\"<val>\",\"name\":\"<val>\",\"ref_id\":\"<val>\",\"scope\":\"<val>\",\"status\":\"<val>\",\"type\":\"<val>\",\"url\":\"<val>\"}}",
+            "namespace": "mobapi.searches",
+            "recommendation": {
+                "index": "{\"_id\": 1, \"ref_id\": 1, \"name\": 1, \"url\": 1, \"type\": 1, \"scope\": 1, \"status\": 1, \"created\": 1}",
+                "namespace": "mobapi.searches",
+                "shellCommand": "db[\"searches\"].ensureIndex({\"_id\": 1, \"ref_id\": 1, \"name\": 1, \"url\": 1, \"type\": 1, \"scope\": 1, \"status\": 1, \"created\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 1,
+                "totalTimeMillis": 104,
+                "avgTimeMillis": 104
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"country\":1},\"$query\":{}}",
+            "namespace": "mobapi.countries",
+            "recommendation": {
+                "index": "{\"country\": 1}",
+                "namespace": "mobapi.countries",
+                "shellCommand": "db[\"countries\"].ensureIndex({\"country\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 2,
+                "totalTimeMillis": 79,
+                "avgTimeMillis": 39
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"membercount\":-1},\"$query\":{\"status\":\"<val>\",\"viral\":\"<val>\"}}",
+            "namespace": "mobapi.groups",
+            "recommendation": {
+                "index": "{\"status\": 1, \"viral\": 1, \"membercount\": 1}",
+                "namespace": "mobapi.groups",
+                "shellCommand": "db[\"groups\"].ensureIndex({\"status\": 1, \"viral\": 1, \"membercount\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 2,
+                "totalTimeMillis": 76,
+                "avgTimeMillis": 38
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"_id\":\"<val>\",\"colors\":[],\"imagepath\":\"<val>\",\"options\":\"<val>\",\"ref_id\":\"<val>\"}}",
+            "namespace": "mobapi.images",
+            "recommendation": {
+                "index": "{\"_id\": 1, \"ref_id\": 1, \"imagepath\": 1, \"colors\": 1, \"options\": 1}",
+                "namespace": "mobapi.images",
+                "shellCommand": "db[\"images\"].ensureIndex({\"_id\": 1, \"ref_id\": 1, \"imagepath\": 1, \"colors\": 1, \"options\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 1,
+                "totalTimeMillis": 58,
+                "avgTimeMillis": 58
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"_id\":\"<val>\",\"members.uid\":\"<val>\"}}",
+            "namespace": "mobapi.teams",
+            "recommendation": {
+                "index": "{\"_id\": 1, \"members.uid\": 1}",
+                "namespace": "mobapi.teams",
+                "shellCommand": "db[\"teams\"].ensureIndex({\"_id\": 1, \"members.uid\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 2,
+                "totalTimeMillis": 49,
+                "avgTimeMillis": 24
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"_id\":\"<val>\",\"created\":\"<val>\",\"groupid\":\"<val>\",\"members\":[{\"created\":\"<val>\",\"role\":\"<val>\",\"uid\":\"<val>\"}],\"name\":\"<val>\",\"url\":\"<val>\",\"userid\":\"<val>\"}}",
+            "namespace": "mobapi.teams",
+            "recommendation": {
+                "index": "{\"_id\": 1, \"name\": 1, \"groupid\": 1, \"created\": 1, \"members\": 1, \"userid\": 1, \"url\": 1}",
+                "namespace": "mobapi.teams",
+                "shellCommand": "db[\"teams\"].ensureIndex({\"_id\": 1, \"name\": 1, \"groupid\": 1, \"created\": 1, \"members\": 1, \"userid\": 1, \"url\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 2,
+                "totalTimeMillis": 48,
+                "avgTimeMillis": 24
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"_id\":\"<val>\",\"comments\":\"<val>\",\"created\":\"<val>\",\"group_id\":\"<val>\",\"imageindex\":\"<val>\",\"modified\":\"<val>\",\"reference_id\":\"<val>\",\"streamdata\":[],\"type\":\"<val>\",\"user_id\":\"<val>\"}}",
+            "namespace": "mobapi.groupcomments",
+            "recommendation": {
+                "index": "{\"_id\": 1, \"user_id\": 1, \"reference_id\": 1, \"group_id\": 1, \"type\": 1, \"comments\": 1, \"created\": 1, \"imageindex\": 1, \"modified\": 1, \"streamdata\": 1}",
+                "namespace": "mobapi.groupcomments",
+                "shellCommand": "db[\"groupcomments\"].ensureIndex({\"_id\": 1, \"user_id\": 1, \"reference_id\": 1, \"group_id\": 1, \"type\": 1, \"comments\": 1, \"created\": 1, \"imageindex\": 1, \"modified\": 1, \"streamdata\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 1,
+                "totalTimeMillis": 34,
+                "avgTimeMillis": 34
+            }
+        }, 
+        {
+            "queryMask": "{\"$orderby\":{\"created\":-1},\"$query\":{\"to\":\"<val>\"}}",
+            "namespace": "mobapi.notificationmappings",
+            "recommendation": {
+                "index": "{\"to\": 1, \"created\": 1}",
+                "namespace": "mobapi.notificationmappings",
+                "shellCommand": "db[\"notificationmappings\"].ensureIndex({\"to\": 1, \"created\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 1,
+                "totalTimeMillis": 26,
+                "avgTimeMillis": 26
+            }
+        }, 
+        {
+            "queryMask": "{\"$query\":{\"stream_id\":\"<val>\"}}",
+            "namespace": "mobapi.spamstreams",
+            "recommendation": {
+                "index": "{\"stream_id\": 1}",
+                "namespace": "mobapi.spamstreams",
+                "shellCommand": "db[\"spamstreams\"].ensureIndex({\"stream_id\": 1}, {\"background\": true})"
+            }, 
+            "details": {
+                "count": 1,
+                "totalTimeMillis": 25,
+                "avgTimeMillis": 25
+            }
+        }
+    ]
+}

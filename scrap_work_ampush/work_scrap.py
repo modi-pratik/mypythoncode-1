@@ -177,7 +177,7 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
 
     start_time = time.time()
     # number of apps should be in multiple of 20 as each page has 20 apps
-    number_apps = 60 # change here
+    number_apps = 200 # change here
     book = xlwt.Workbook(encoding="utf-8")
 
     url_list = [
@@ -315,9 +315,9 @@ def main_function(facebook_apps=None, top_free_ios_games_us=None, top_paid_ios_g
     book.save(filename)
 
     msg = MIMEMultipart()
-    send_from = '******'
-    send_to = '*******'
-    mail_username, mail_password = '*********', "*********"
+    send_from = 'snehal.java@gmail.com' #'******'
+    send_to = 'snehaldot@gmail.com' #'*******'
+    mail_username, mail_password = 'snehal.java@gmail.com', 'snehaldot@12' #'*********', "*********"
 
     msg['From'] = send_from
     msg['To'] = send_to
