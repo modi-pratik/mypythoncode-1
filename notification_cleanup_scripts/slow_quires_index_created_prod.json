@@ -1,0 +1,48 @@
+/usr/bin/python /home/stonex/repos/mypythoncode/notification_cleanup_scripts/read_json_dex.py
+
+avgTimeMillis:  916  namespace:  mobapi.queue_images  recommendation:  db["queue_images"].ensureIndex({"qatool_uid": 1, "qatool_flag": 1}, {"background": true})
+avgTimeMillis:  1023  namespace:  mobapi.queue_images  recommendation:  db["queue_images"].ensureIndex({"qatool_uid": 1, "qatool_flag": 1}, {"background": true})
+
+avgTimeMillis:  748  namespace:  mobapi.queue_images  recommendation:  db["queue_images"].ensureIndex({"qatool_uid": 1, "qatool_flag": 1, "logo_uid.flag": 1}, {"background": true})  done on production
+avgTimeMillis:  748  namespace:  mobapi.queue_images  recommendation:  db["queue_images"].ensureIndex({"qatool_uid": 1, "qatool_flag": 1, "logo_uid.flag": 1}, {"background": true})
+
+
+
+
+avgTimeMillis:  295  namespace:  mobapi.queue_compaddresses  recommendation:  db["queue_compaddresses"].ensureIndex({"urlname": 1}, {"background": true})
+avgTimeMillis:  225  namespace:  mobapi.queue_compaddresses  recommendation:  db["queue_compaddresses"].ensureIndex({"urlname": 1}, {"background": true}) done
+
+
+avgTimeMillis:  15994  namespace:  mobapi.companies  recommendation:  db["companies"].ensureIndex({"modified": 1}, {"background": true}) done
+
+
+avgTimeMillis:  4989  namespace:  mobapi.notificationmappings  recommendation:  db["notificationmappings"].ensureIndex({"to": 1, "notify": 1}, {"background": true})  done
+
+avgTimeMillis:  4257  namespace:  mobapi.reports  recommendation:  db["reports"].ensureIndex({"queueid": 1, "uid": 1, "task": 1}, {"background": true}) done
+avgTimeMillis:  51  namespace:  mobapi.reports  recommendation:  db["reports"].ensureIndex({"queueid": 1, "uid": 1, "task": 1}, {"background": true})
+
+avgTimeMillis:  60  namespace:  mobapi.activitylogs  recommendation:  db["activitylogs"].ensureIndex({"created": 1, "user_id": 1}, {"background": true}) done
+
+avgTimeMillis:  182  namespace:  mobapi.groups  recommendation:  db["groups"].ensureIndex({"members.uid": 1, "created": 1, "scope": 1}, {"background": true}) done
+
+
+Process finished with exit code 0
+
+
+
+
+
+
+
+
+
+public $default = array(
+                'datasource' => 'Mongodb.MongodbSource',
+                'persistent' => false,
+                'host' => '10.225.171.204',
+                'login' => 'livedbuser',
+                'password' => 'WeCnI8VjEiFg4AzX3BjOg4W2R6Q8D',
+                'database' => 'mobapi',
+                'prefix' => '',
+                //'encoding' => 'utf8',
+        );

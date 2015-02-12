@@ -1,14 +1,12 @@
 __author__ = 'Snehal'
 
 # from DBSetting import db
-# , delete_notification_records
 import time
 from datetime import timedelta
 from pymongo import MongoClient
 
 
 if __name__ == '__main__':
-
     # connection details
     # connection_string = raw_input("Plesse enter the connection string: i.e mongodb://192.168.4.86:27017/ : ")
 
@@ -30,7 +28,7 @@ if __name__ == '__main__':
         from_username = notification['from']
 
         # follow_count and follower_count
-        if notification['key'] == 'user' and notification['action'] == 'follow':
+        if notification['key'] == 'user' and notification['action'] == 'Follow':
             import ipdb
             ipdb.set_trace()
 

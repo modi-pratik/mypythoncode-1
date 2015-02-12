@@ -56,6 +56,7 @@ if __name__ == "__main__":
         logging.debug("Script starting time : %s", start_time)
         user_list = []
         counter = 1
+        total_notifications = notifications.count()
 
         for user in users.find(timeout=False).limit(10):
             username = user['username']
@@ -118,9 +119,11 @@ if __name__ == "__main__":
 
         # ======================================================================================================
         # following are mail sending part
-
+        current_notifications_count = notifications.count()
         TEXT = "\nTime taken for the Notification_cleanup_daily script: %s and \nCurrently total number notifications: %s " \
-               " \nStart time: %s, and \nEnd time: %s \n compact result: %s" % (time_string, notifications.count(),
+               " Total number of notifications cleaned-up: %s \nStart time: %s, and \nEnd time: %s \n compact result: %s" % \
+                                                          (time_string, current_notifications_count,
+                                                          (total_notifications - current_notifications_count),
                                                           datetime.datetime.fromtimestamp(int(start_time)).strftime(
                                                               '%Y-%m-%d %H:%M:%S'),
                                                           datetime.datetime.fromtimestamp(int(end_time)).strftime(
