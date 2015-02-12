@@ -5,6 +5,7 @@ __author__ = 'stonex'
 from pymongo import MongoClient
 from facepy import GraphAPI
 from facepy import utils
+import facepy
 from operator import itemgetter
 import sys
 
@@ -63,6 +64,18 @@ def get_facebook_update(each):
                     print item
                 # import ipdb
                 # ipdb.set_trace()
+            except facepy.exceptions.OAuthError as error:
+                if 'object does not exist' == error.message:
+                    print "got exception: ", sys.exc_info()[0]
+                    print "facebook url: ", facebook_url
+
+                elif 'Hit API rate limit' == error.message:
+                    print "got exception: ", sys.exc_info()[0]
+                    print "facebook url: ", facebook_url
+
+                else:
+                   raise
+
             except:
                 print "got exception: ", sys.exc_info()[0]
                 print "facebook url: ", facebook_url
