@@ -1,0 +1,43 @@
+
+
+u1 and u2 are users
+
+p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 are posts
+
+l(u1) = [p1, p2, p3, p4, p5]  : u1 likes posts list
+
+l(u2) = [p1, p2, p3, p4, p5]  : u2 likes posts list
+
+l(u3) = [p6, p7, p8, p9, p10]  : u3 likes posts list
+
+dl is dislike just like the above
+
+
+
+finding index: it should have values [-1, 0, 1]
+
+if the n(u1) >= 5
+    then: if l(u1) is sub-set of l(u2): index is 1 for u1 to u2
+
+index = n[l(u1) intersection l(u2)] + n[dl(u1)+dl(u2)] / n(u1) + n(u2)
+
+
+find index for all user pair
+[u1, u2, u3]
+
+
+sort by index for each user and take top 5
+get post from top 5 untill the posts count is 10 which user itself doesn't have liked before
+
+
+
+
+=================================================================================
+
+login page:
+
+coursel_img.jpg  1677
+coursel2_img.jpg  4661
+
+
+
