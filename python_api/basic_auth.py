@@ -6,8 +6,9 @@ from bson import json_util
 from bson.objectid import ObjectId
 from pymongo import Connection, MongoClient
 import memcache
-from functools import wraps
 from flask import request, abort, Flask, jsonify, url_for
+import redis
+from functools import wraps
 from passlib.apps import custom_app_context as pwd_context
 # from passlib.hash import sha256_crypt
 
@@ -55,6 +56,8 @@ def get_stream():
 
     # connecting to local memcache server
     mc = memcache.Client(['127.0.0.1:11211'], debug=0)
+    # redis server
+    r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
     # getting the parameters from the request
     streamtype = request.args.get('streamtype', None)
@@ -75,7 +78,10 @@ def get_stream():
     print "memcache_key: ", memcache_key
 
     # looking for memcache_key in server
-    json_results = mc.get(memcache_key)
+    # json_results = mc.get(memcache_key)
+
+    # redis read
+    json_results = r.get(memcache_key)
     if not json_results:
         # memcache miss call
         # import ipdb
@@ -87,7 +93,10 @@ def get_stream():
         json_results = json.dumps(query_js, default=json_util.default)
 
         # setting the memcache in local server
-        mc.set(memcache_key, json_results)
+        # mc.set(memcache_key, json_results)
+
+        # setting value in redis
+        r.set(memcache_key, json_results)
 
     return json_results
 
