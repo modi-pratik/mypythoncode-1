@@ -1,4 +1,3 @@
-import hashlib
 
 __author__ = 'stonex'
 import json
@@ -10,6 +9,7 @@ from flask import request, abort, Flask, jsonify, url_for
 import redis
 from functools import wraps
 from passlib.apps import custom_app_context as pwd_context
+import hashlib
 # from passlib.hash import sha256_crypt
 
 
@@ -81,6 +81,7 @@ def get_stream():
     # json_results = mc.get(memcache_key)
 
     # redis read
+    # json_results = None
     json_results = r.get(memcache_key)
     if not json_results:
         # memcache miss call
