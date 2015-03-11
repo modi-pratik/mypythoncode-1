@@ -54,7 +54,7 @@ def toJson(data):
 @app.route('/api/getstream', methods=['GET'])
 def get_stream():
     from ast import literal_eval
-
+    #http://127.0.0.1:5000/api/getstream?streamtype=Stream&id=5386f7d8bbe855db0e8b45d8&query={%22status%22%3A%22active%22%2C%22company_id%22%3A%225386f7d8bbe855db0e8b45d8%22}&fields={}&limit=50&page=0&order={%22created%22%3A-1}&comment=0&showpromocards=1&apikey=api2014arcgate
     # connecting to local memcache server
     mc = memcache.Client(['127.0.0.1:11211'], debug=0)
     # redis server
