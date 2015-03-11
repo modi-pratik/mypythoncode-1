@@ -1,5 +1,4 @@
-
-__author__ = 'stonex'
+__author__ = 'snehal'
 import json
 from bson import json_util
 from bson.objectid import ObjectId
@@ -39,7 +38,9 @@ import hashlib
 app = Flask(__name__)
 
 # MongoDB connection
-connection_string = 'mongodb://192.168.4.86:27017/'
+# connection_string = 'mongodb://192.168.4.86:27017/'
+connection_string = 'mongodb://10.184.172.70:27017'
+
 client = MongoClient(connection_string)
 db = client['mobapi']
 
@@ -57,7 +58,7 @@ def get_stream():
     # connecting to local memcache server
     mc = memcache.Client(['127.0.0.1:11211'], debug=0)
     # redis server
-    r = redis.StrictRedis(host='localhost', port=6379, db=0)
+    # r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
     # getting the parameters from the request
     streamtype = request.args.get('streamtype', None)
@@ -71,18 +72,18 @@ def get_stream():
     comment = request.args.get('comment')
     showpromocards = request.args.get('showpromocards')
     apikey = request.args.get('apikey')
-    query_dict = literal_eval(query)
+    # query_dict = literal_eval(query)
 
-    # making memcache key
-    memcache_key = str(id + "_" + query_dict['company_id'])
-    print "memcache_key: ", memcache_key
+    # # making memcache key
+    # memcache_key = str(id + "_" + query_dict['company_id'])
+    # print "memcache_key: ", memcache_key
 
     # looking for memcache_key in server
     # json_results = mc.get(memcache_key)
 
     # redis read
-    # json_results = None
-    json_results = r.get(memcache_key)
+    json_results = None
+    # json_results = r.get(memcache_key)
     if not json_results:
         # memcache miss call
         # import ipdb
@@ -97,7 +98,7 @@ def get_stream():
         # mc.set(memcache_key, json_results)
 
         # setting value in redis
-        r.set(memcache_key, json_results)
+        # r.set(memcache_key, json_results)
 
     return json_results
 
@@ -121,8 +122,8 @@ def new_user():
         if user_pwd_db == user_hashed_pwd:
             # success
             print "user is valid user"
-            import ipdb
-            ipdb.set_trace()
+            # import ipdb
+            # ipdb.set_trace()
         else:
             abort(400) # existing user
     # user = User(username=username)
