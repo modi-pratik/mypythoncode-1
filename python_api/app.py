@@ -1,21 +1,26 @@
-# from flask import Flask, jsonify
 import json
 from bson import json_util
 from bson.objectid import ObjectId
 from pymongo import Connection, MongoClient
+import logging
 # import memcache
 from flask import request, abort, Flask, jsonify, url_for
-import redis
 from functools import wraps
+import time
+import redis
 from passlib.apps import custom_app_context as pwd_context
 import hashlib
-import time
-import logging
 from logging.handlers import RotatingFileHandler
 
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
+
+
+""" root or index page view functions here"""
+@app.route('/')
+def index():
+    return 'Flask is running!'
 
 
 """
@@ -35,10 +40,13 @@ def require_appkey(view_function):
     return decorated_function
 
 
-""" root or index page view functions here"""
-@app.route('/')
-def index():
-    return 'Flask is running!'
+# """ verify the user is logged in or not """
+def verify_token(token):
+    """ here verify id to where cake php saves the userid"""
+    if token:
+        return True
+    else:
+        return False
 
 
 """ test response (json data) from api """
@@ -50,12 +58,15 @@ def names():
 
 """ converts the data to json data"""
 def toJson(data):
-    """Convert Mongo object(s) to JSON"""
+    """Convert Mongo object(s) to JSON
+    :rtype : json object
+    """
     return json.dumps(data, default=json_util.default)
 
 
-"""
+"""==================================================================================================================
     Api call for getStream which returns json
+   ==================================================================================================================
 """
 @app.route('/api/getstream', methods=['GET'])
 @require_appkey
@@ -125,16 +136,12 @@ def get_stream():
     return json_results
 
 
-# """ verify the user is logged in or not """
-def verify_token(token):
-    """ here verify id to where cake php saves the userid"""
-    if token:
-        return True
-    else:
-        return False
 
 
-# Api to get company profile
+"""==================================================================================================================
+     Api to get company profile
+   ==================================================================================================================
+"""
 @app.route('/api/company/profile', methods=['GET'])
 @require_appkey
 def get_profile():
@@ -202,16 +209,17 @@ def get_profile():
     return json_results
 
 
-# Api call for edit User which returns json
+"""==================================================================================================================
+    Api call for edit User which returns json
+   ==================================================================================================================
+"""
 @app.route('/api/users/edit', methods=['POST'])
 @require_appkey
 def edit_user():
     """ get the tokenId which is session id and verify with other verify function if verified moved to edit part and
      return successfully changed or unsuccessful """
 
-
     print "apikey verified"
-
     about = request.args.get('about', None)
     displayname = request.args.get('displayname', None)
     username = request.args.get('username', None)
@@ -224,12 +232,9 @@ def edit_user():
     fname = request.args.get('fname',None)
     # apikey = request.args.get('apikey', None)
 
-
     # Check the user is logged in and have valid session id
     # verify_token(token)
 
-    # import ipdb
-    # ipdb.set_trace()
     # Saving the details in db
     db_result = db.users.update({'_id': ObjectId(_id)}, {"$set": {
                                                                   'fname': fname
@@ -248,9 +253,73 @@ def edit_user():
     return json_results
 
 
-if __name__ == '__main__':
-    import logging
+"""==================================================================================================================
+    API FUNCTION TO GET COMPANY DETAILS BY PARAMETERS
+   ==================================================================================================================
+"""
+@app.route('/api/company/get', methods=['GET'])
+@require_appkey
+def get_company():
+    """ get company details by params """
 
+    name = request.args.get('name', None)
+    limit_search = request.args.get('limit', 0)
+    page = request.args.get('page', 0)
+    orderby = request.args.get('orderby', -1)
+    urlname = request.args.get('urlname', None)
+    check2 = {}
+    count = 0
+    start_time = time.time()
+    # logic for getting limit for query from limit and page data
+    if limit_search and page:
+        limit_query = limit_search * page
+    else:
+        limit_query = limit_search
+
+    if name:
+        # import re
+        # regx = re.compile("^" + name, re.IGNORECASE)
+        # test = db.companies.find({'name': regx})
+        # check1 = [t['name'] for t in test]
+        # end1 = time.time()
+        # import ipdb
+        # ipdb.set_trace()
+        # mongo always runs sort and then apply the limit, with different order the limit results will be also different
+        test = db.companies.find({'name': {'$regex': '^' + name, "$options": "-i"}}).limit(limit_query).sort('created', orderby)
+
+        # logic for getting the format as php api does
+        for each in test:
+            check2[count] = {'Company': each}
+            count += 1
+
+        # print "time: ", (end2 - start_time), "check: ", check2
+        # print test
+    if urlname:
+        test = db.companies.find({'name': {'$regex': '^' + name, "$options": "-i"}}).limit(limit_query).sort(
+            'created', orderby)
+
+        check2 = list(test)
+
+        # print "time: ", (end2 - start_time), "check: ", check2
+        for each in test:
+            check2[count] = {'Company': each}
+            count += 1
+    end_time = time.time()
+    # total = test.count()
+    result1 = {'result': {'status': True, 'msg': 'list of companies', 'Total': count, 'data': check2}}
+    # log it in logger with the time taken:
+    print "api finished working with time(secs): ",(end_time - start_time)
+    json_results = json.dumps(result1, default=json_util.default)
+    return json_results
+
+
+"""==================================================================================================================
+    End of api part
+   ==================================================================================================================
+"""
+
+
+if __name__ == '__main__':
     """
         MongoDB connection
         connection_string = 'mongodb://192.168.4.86:27017/'
@@ -258,8 +327,15 @@ if __name__ == '__main__':
     connection_string = 'mongodb://10.184.172.70:27017'
     [username, password, host, port, db] = ['livedbuser', 'WeCnI8VjEiFg4AzX3BjOg4W2R6Q8D', '54.80.251.254', '27017', 'mobapi']
     mongo_uri = 'mongodb://%s:%s@%s:%s/%s' % (username, password, host, port, db)
-    # print "mongo uri: ", mongo_uri
+
+    print "mongo uri: ", mongo_uri
     client = MongoClient(mongo_uri)
+
+    # import ipdb
+    # ipdb.set_trace()
+    """ testing database """
+    connection_string = 'mongodb://192.168.4.86:27017/'
+    client = MongoClient(connection_string)
 
     db = client['mobapi']
     """ test db connection """
