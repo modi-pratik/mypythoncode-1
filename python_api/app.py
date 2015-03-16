@@ -1,3 +1,4 @@
+import ujson
 import json
 from bson import json_util
 from bson.objectid import ObjectId
@@ -8,9 +9,9 @@ from flask import request, abort, Flask, jsonify, url_for
 from functools import wraps
 import time
 import redis
-from passlib.apps import custom_app_context as pwd_context
-import hashlib
-from logging.handlers import RotatingFileHandler
+# from passlib.apps import custom_app_context as pwd_context
+# import hashlib
+# from logging.handlers import RotatingFileHandler
 
 
 app = Flask(__name__)
@@ -123,7 +124,8 @@ def get_stream():
         # result = db.system_js.getStream(streamtype, id, "", query, fields, limit, page, order, comment, showpromocards, apikey)
         query_js = db.eval(str1)
 
-        json_results = json.dumps(query_js, default=json_util.default)
+        result = {'Total': len(query_js), 'status': True, 'msg': "list of streams", 'data': query_js}
+        json_results = json.dumps(result, default=json_util.default)
 
         # setting the memcache in local server
         # mc.set(memcache_key, json_results)
@@ -134,8 +136,6 @@ def get_stream():
     time_take = end_time - start_time
     print "time take: ", time_take
     return json_results
-
-
 
 
 """==================================================================================================================
@@ -269,6 +269,7 @@ def get_company():
     urlname = request.args.get('urlname', None)
     check2 = {}
     count = 0
+
     start_time = time.time()
     # logic for getting limit for query from limit and page data
     if limit_search and page:
@@ -277,6 +278,7 @@ def get_company():
         limit_query = limit_search
 
     if name:
+        # way 1
         # import re
         # regx = re.compile("^" + name, re.IGNORECASE)
         # test = db.companies.find({'name': regx})
@@ -304,12 +306,76 @@ def get_company():
         for each in test:
             check2[count] = {'Company': each}
             count += 1
-    end_time = time.time()
+
     # total = test.count()
     result1 = {'result': {'status': True, 'msg': 'list of companies', 'Total': count, 'data': check2}}
-    # log it in logger with the time taken:
-    print "api finished working with time(secs): ",(end_time - start_time)
+    start_time = time.time()
     json_results = json.dumps(result1, default=json_util.default)
+    end_time1 = time.time()
+    json_results = ujson.dumps(result1, ensure_ascii=False)
+    end_time = time.time()
+    # log it in logger with the time taken:
+    print "api finished working with time(secs) json: ", (end_time1 - start_time)
+    print "api finished working with time(secs): ujson", (end_time - end_time1)
+    import ipdb
+    ipdb.set_trace()
+
+    return json_results
+
+"""==================================================================================================================
+    Api for getfan for companies
+   ==================================================================================================================
+"""
+@app.route('/api/company/getfans', methods=['GET'])
+@require_appkey
+def get_fans():
+    """ get fans for companies """
+    page = request.args.get('page', 1)
+    limit = int(request.args.get('limit', 1))
+    _id = request.args.get('_id', None)
+    count = 0
+    fans_dict = {}
+
+    if request.args.get('_id'):
+        _id = request.args.get('_id')
+    else:
+        urlname = request.args.get('urlname')
+        _id = db.companies.find_one({'urlname': urlname}, {'_id': 1})
+
+    fields = ('username', 'fname', 'lname', 'picture', 'followers', 'companiesfan')
+    # _id = '5386f7d8bbe855db0e8b45d8'
+    fans = db.users.find({'companiesfan.cid': _id}, fields).limit(limit)
+    # count the no. of compaines user follwoing
+    # count the followers user has
+
+    for each in fans:
+        each['companycount'] = len(each['companiesfan'])
+        each['followerscount'] = len(each.get('followers')) if each.get('followers') else 0
+
+        # *** find current user is fan of the each (user) here ???
+
+        cureent_userId = None
+        # import ipdb
+        # ipdb.set_trace()
+
+        if cureent_userId in each.get('followers'):
+            each['isFollow'] = True
+        else:
+            each['isFollow'] = False
+
+        fans_dict[count] = {'User': each}
+        count += 1
+
+    result = {'Total': count, 'data': fans_dict, 'status': True, 'msg': 'list of company fans'}
+    json_data = {'result': result}
+    json_results = json.dumps(json_data, default=json_util.default)
+    end_time = time.time()
+    # log it in logger with the time taken:
+    # print "api finished working with time(secs) json: ", (end_time1 - start_time)
+    # print "api finished working with time(secs): ujson", (end_time - end_time1)
+    # import ipdb
+    # ipdb.set_trace()
+
     return json_results
 
 
@@ -346,3 +412,5 @@ if __name__ == '__main__':
     # handler.setLevel(logging.DEBUG)
     # app.logger.addHandler(handler)
     app.run()
+
+    # app.test_client()
