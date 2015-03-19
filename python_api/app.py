@@ -1,21 +1,22 @@
-import ujson
 import json
 from bson import json_util
 from bson.objectid import ObjectId
 from pymongo import Connection, MongoClient
 import logging
-# import memcache
 from flask import request, abort, Flask, jsonify, url_for
 from functools import wraps
 import time
-import redis
+
+# import ujson
+# import memcache
+# import redis
 # from passlib.apps import custom_app_context as pwd_context
 # import hashlib
 # from logging.handlers import RotatingFileHandler
 
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
+# app.config['DEBUG'] = True
 
 
 """ root or index page view functions here"""
@@ -69,11 +70,14 @@ def toJson(data):
     Api call for getStream which returns json
    ==================================================================================================================
 """
-@app.route('/api/getstream', methods=['GET'])
+@app.route('/api/stream/getStreams.json', methods=['GET'])
 @require_appkey
 def get_stream():
     """ storing the start of time for api"""
+    # import ipdb
+    # ipdb.set_trace()
     start_time = time.time()
+    # db = client['mobapi_live']
     """ import for the view fuction"""
     from ast import literal_eval
     # app.logger.warning('A warning occurred (%d apples)', 42)
@@ -85,26 +89,34 @@ def get_stream():
     # r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
     # getting the parameters from the request
-    streamtype = request.args.get('streamtype', None)
-    id = request.args.get('id', "")
+    streamtype = request.args.get('streamtype', "Stream")
+    id = request.args.get('id', "5386f7d8bbe855db0e8b45d8")
     # loggedinUser['_id'] =
-    query = request.args.get('query')
-    fields = request.args.get('fields')
-    limit = request.args.get('limit')
-    page = request.args.get('page')
-    order = request.args.get('order')
-    comment = request.args.get('comment')
-    showpromocards = request.args.get('showpromocards')
+    # query = request.args.get('query')
+
+    query_dict = {"status": "active", "company_id": id}
+    query = json.dumps(query_dict)
+
+    fields = request.args.get('fields', '{}')
+    limit = request.args.get('limit', '1')
+    page = request.args.get('page', '1')
+
+    order = request.args.get('order', 1)
+    order_dict = {order: 1}
+    order = json.dumps(order_dict)
+
+    comment = request.args.get('comment', '0')
+    showpromocards = request.args.get('showpromocards', '1')
     apikey = request.args.get('apikey')
     # import ipdb
     # ipdb.set_trace()
     # app.logger.info('A info (query: %s)', query)
     # logfile = logging.getLogger('file')
     logging.debug('A info (query: %s)', query)
-    if query:
-        query_dict = literal_eval(query)
-    else:
-        abort(404)
+    # if query:
+    #     query_dict = literal_eval(query)
+    # else:
+    #     abort(404)
 
     """ making memcache or redis key """
     # key = str(id + "_" + query_dict['company_id'])
@@ -119,13 +131,21 @@ def get_stream():
     """ cache miss logic """
     if not json_results:
         # memcache miss call
-        json_results = []
-        str1 = 'getStream('+'"'+streamtype+'"'+','+'"'+id+'"'+','+'""'+','+query+','+'"'+fields+'"'+','+'"'+limit+'"'+','+'"'+page+'"'+','+order+','+'"'+comment+'"'+','+'"'+showpromocards+'"'+','+'"'+apikey+'"'+')'
-        # result = db.system_js.getStream(streamtype, id, "", query, fields, limit, page, order, comment, showpromocards, apikey)
+        # json_results = []
+        # import ipdb
+        # ipdb.set_trace()
+        str1 = 'getStream(' + '"' + streamtype + '"' + ',' + '"' + id + '"' + ',' + '""' + ',' + query + ',' + '"' +\
+               fields + '"' + ',' + '"' + limit + '"' + ',' + '"' + page + '"' + ',' + order + ',' + '"' + comment +\
+               '"' + ',' + '"' + showpromocards + '"' + ',' + '"' + apikey + '"' + ')'
+        # result = db.system_js.getStream(streamtype, id, "", query, fields, limit, page, order, comment,
+        #  showpromocards, apikey)
         query_js = db.eval(str1)
 
-        result = {'Total': len(query_js), 'status': True, 'msg': "list of streams", 'data': query_js}
-        json_results = json.dumps(result, default=json_util.default)
+        # import ipdb
+        # ipdb.set_trace()
+        result = {'Total': query_js['total'], 'status': True, 'msg': "list of streams", 'data': query_js}
+        format_result = {'result': result}
+        json_results = json.dumps(format_result, default=json_util.default)
 
         # setting the memcache in local server
         # mc.set(memcache_key, json_results)
@@ -142,12 +162,12 @@ def get_stream():
      Api to get company profile
    ==================================================================================================================
 """
-@app.route('/api/company/profile', methods=['GET'])
+@app.route('/api/company/profile.json', methods=['GET'])
 @require_appkey
 def get_profile():
     """ get api for company profile """
-    logging.debug('A info (query: %s)', "query")
-    logging.info("testing")
+    # logging.debug('A info (query: %s)', "query")
+    # logging.info("testing")
 
     fields = None
     qs_result = None
@@ -196,6 +216,8 @@ def get_profile():
         groups = db.groups.find({'cid': cid, 'status': status, 'scope': scope}, {'_id': 1})
         groupids = [str(g['_id']) for g in groups]
         # canedit logic still figure out, depends on user
+        qs_result['_id'] = cid
+        qs_result['category'] = qs_result['category'][0]
         qs_result['groups'] = groupids
         qs_result['groupcount'] = len(groupids) + 1
         status = True
@@ -204,6 +226,8 @@ def get_profile():
         status = False
         msg = "company doesn't exist or database issue"
     # result = {'status': 'true', 'msg': 'successfully changed the details', 'data': qs_result}
+    # import ipdb
+    # ipdb.set_trace()
     final = {'result': {'status': status, 'msg': msg, 'data': qs_result}}
     json_results = json.dumps(final, default=json_util.default)
     return json_results
@@ -213,7 +237,7 @@ def get_profile():
     Api call for edit User which returns json
    ==================================================================================================================
 """
-@app.route('/api/users/edit', methods=['POST'])
+@app.route('/api/users/edit.json', methods=['POST'])
 @require_appkey
 def edit_user():
     """ get the tokenId which is session id and verify with other verify function if verified moved to edit part and
@@ -257,25 +281,32 @@ def edit_user():
     API FUNCTION TO GET COMPANY DETAILS BY PARAMETERS
    ==================================================================================================================
 """
-@app.route('/api/company/get', methods=['GET'])
+@app.route('/api/company/get.json', methods=['GET'])
 @require_appkey
 def get_company():
     """ get company details by params """
 
     name = request.args.get('name', None)
     limit_search = request.args.get('limit', 0)
+    limit_search = int(limit_search) if limit_search else 0
     page = request.args.get('page', 0)
     orderby = request.args.get('orderby', -1)
     urlname = request.args.get('urlname', None)
-    check2 = {}
+
+    data = {}
     count = 0
+    skip_records = 0
 
     start_time = time.time()
     # logic for getting limit for query from limit and page data
-    if limit_search and page:
-        limit_query = limit_search * page
-    else:
-        limit_query = limit_search
+
+    if page:
+        skip_records = page * 10
+
+    # if limit_search and page:
+    #     limit_query = limit_search * page
+    # else:
+    #     limit_query = limit_search
 
     if name:
         # way 1
@@ -287,46 +318,47 @@ def get_company():
         # import ipdb
         # ipdb.set_trace()
         # mongo always runs sort and then apply the limit, with different order the limit results will be also different
-        test = db.companies.find({'name': {'$regex': '^' + name, "$options": "-i"}}).limit(limit_query).sort('created', orderby)
+        result_crx = db.companies.find({'name': {'$regex': '^' + name, "$options": "-i"}}).limit(limit_search).sort('created', orderby)
+        # result_crx = db.companies.find({'name': {'$regex': '^' + name, "$options": "-i"}}).skip(skip_records)\
+        #     .limit(limit_search).sort('created', orderby)
 
         # logic for getting the format as php api does
-        for each in test:
-            check2[count] = {'Company': each}
-            count += 1
+        # for each in result_crx:
+        #     data[count] = {'Company': each}
+        #     count += 1
 
-        # print "time: ", (end2 - start_time), "check: ", check2
-        # print test
     if urlname:
-        test = db.companies.find({'name': {'$regex': '^' + name, "$options": "-i"}}).limit(limit_query).sort(
-            'created', orderby)
+        result_crx = db.companies.find({'name': {'$regex': '^' + name, "$options": "-i"}}).skip(skip_records)\
+            .limit(limit_search).sort('created', orderby)
 
-        check2 = list(test)
+        # data = list(test)
 
-        # print "time: ", (end2 - start_time), "check: ", check2
-        for each in test:
-            check2[count] = {'Company': each}
-            count += 1
+    # print "time: ", (end2 - start_time), "check: ", data
+    for each in result_crx:
+        data[count] = {'Company': each}
+        count += 1
 
-    # total = test.count()
-    result1 = {'result': {'status': True, 'msg': 'list of companies', 'Total': count, 'data': check2}}
-    start_time = time.time()
+    total = result_crx.count()
+    result1 = {'result': {'status': True, 'msg': 'list of companies', 'Total': total, 'data': data}}
+
     json_results = json.dumps(result1, default=json_util.default)
-    end_time1 = time.time()
-    json_results = ujson.dumps(result1, ensure_ascii=False)
+    # end_time1 = time.time()
+    # json_results = ujson.dumps(result1, ensure_ascii=False)
     end_time = time.time()
     # log it in logger with the time taken:
-    print "api finished working with time(secs) json: ", (end_time1 - start_time)
-    print "api finished working with time(secs): ujson", (end_time - end_time1)
-    import ipdb
-    ipdb.set_trace()
+    print "api finished working with time(secs) json: ", (end_time - start_time)
+    # print "api finished working with time(secs): ujson", (end_time - end_time1)
+    # import ipdb
+    # ipdb.set_trace()
 
     return json_results
+
 
 """==================================================================================================================
     Api for getfan for companies
    ==================================================================================================================
 """
-@app.route('/api/company/getfans', methods=['GET'])
+@app.route('/api/company/getfans.json', methods=['GET'])
 @require_appkey
 def get_fans():
     """ get fans for companies """
@@ -336,6 +368,7 @@ def get_fans():
     count = 0
     fans_dict = {}
 
+    start_time = time.time()
     if request.args.get('_id'):
         _id = request.args.get('_id')
     else:
@@ -348,9 +381,16 @@ def get_fans():
     # count the no. of compaines user follwoing
     # count the followers user has
 
+    # new_fan_dict = fans
+
     for each in fans:
-        each['companycount'] = len(each['companiesfan'])
+        each['companycount'] = len(each.get('companiesfan')) if each.get('companiesfan') else 0
         each['followerscount'] = len(each.get('followers')) if each.get('followers') else 0
+
+        if each.get('followers'):
+            del each['followers']
+        if each.get('companiesfan'):
+            del each['companiesfan']
 
         # *** find current user is fan of the each (user) here ???
 
@@ -358,21 +398,20 @@ def get_fans():
         # import ipdb
         # ipdb.set_trace()
 
-        if cureent_userId in each.get('followers'):
-            each['isFollow'] = True
-        else:
-            each['isFollow'] = False
+        # if cureent_userId in each.get('followers'):
+        #     each['isFollow'] = True
+        # else:
+        #     each['isFollow'] = False
 
         fans_dict[count] = {'User': each}
         count += 1
-
     result = {'Total': count, 'data': fans_dict, 'status': True, 'msg': 'list of company fans'}
     json_data = {'result': result}
     json_results = json.dumps(json_data, default=json_util.default)
     end_time = time.time()
     # log it in logger with the time taken:
-    # print "api finished working with time(secs) json: ", (end_time1 - start_time)
-    # print "api finished working with time(secs): ujson", (end_time - end_time1)
+    logging.debug("api finished working with time(secs): json %s", (end_time - start_time))
+    # print "api finished working with time(secs): json", (end_time - start_time)
     # import ipdb
     # ipdb.set_trace()
 
@@ -412,5 +451,4 @@ if __name__ == '__main__':
     # handler.setLevel(logging.DEBUG)
     # app.logger.addHandler(handler)
     app.run()
-
     # app.test_client()
