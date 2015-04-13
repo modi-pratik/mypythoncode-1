@@ -41,7 +41,7 @@ def require_appkey(view_function):
         else:
             final = {'result': {'status': False, 'msg': "Invalid apikey", 'data': None}}
             json_results = json.dumps(final, default=json_util.default)
-            return json_results
+            return json_results, 200, {'Content-Type': 'application/json'}
             # abort(401)
     return decorated_function
 
@@ -62,12 +62,12 @@ def names():
     return jsonify(data)
 
 
-""" converts the data to json data"""
-def toJson(data):
-    """Convert Mongo object(s) to JSON
-    :rtype : json object
-    """
-    return json.dumps(data, default=json_util.default)
+# """ converts the data to json data"""
+# def toJson(data):
+#     """Convert Mongo object(s) to JSON
+#     :rtype : json object
+#     """
+#     return json.dumps(data, default=json_util.default)
 
 
 def make_db_connection():
@@ -76,25 +76,23 @@ def make_db_connection():
         connection_string = 'mongodb://192.168.4.86:27017/'
     """
     # connection_string = 'mongodb://10.184.172.70:27017'
-    # [username, password, host, port, db] = ['livedbuser', 'WeCnI8VjEiFg4AzX3BjOg4W2R6Q8D', '54.80.251.254', '27017', 'mobapi']
+    # [username, password, host, port, db] = ['livedbuser',
+    # 'WeCnI8VjEiFg4AzX3BjOg4W2R6Q8D', '54.80.251.254', '27017', 'mobapi']
     # mongo_uri = 'mongodb://%s:%s@%s:%s/%s' % (username, password, host, port, db)
 
     # print "mongo uri: ", mongo_uri
     # client = MongoClient(mongo_uri)
-
-    # import ipdb
-    # ipdb.set_trace()
     """ testing database """
     connection_string = 'mongodb://192.168.4.86:27017/'
     client = MongoClient(connection_string)
-
     # db = client['mobapi']
     db = client['mobapi_live']
     """ test db connection """
     print "user count: ", db.users.count()
     return db
 
-app.config['MONGO_URI'] = 'mongodb://192.168.4.86:27017/mobapi'
+
+app.config['MONGO_URI'] = 'mongodb://192.168.4.86:27017/mobapi_live'
 mongo = PyMongo(app, config_prefix='MONGO')
 
 
@@ -109,10 +107,11 @@ def get_stream():
     start_time = time.time()
     db = mongo.db
     """ import for the view fuction"""
-    from ast import literal_eval
+    # from ast import literal_eval
     # app.logger.warning('A warning occurred (%d apples)', 42)
     # app.logger.error('An error occurred')
     # app.logger.info('Info')
+
     # connecting to local memcache server
     # mc = memcache.Client(['127.0.0.1:11211'], debug=0)
     # redis server
@@ -145,15 +144,16 @@ def get_stream():
     # else:
     #     abort(404)
 
-    """ making memcache or redis key """
+    # """ making memcache or redis key """
     # key = str(id + "_" + query_dict['company_id'])
     # print "key: ", key
 
-    """ looking for key in memcache server"""
+    # """ looking for key in memcache server"""
     # json_results = mc.get(key)
 
-    """ looking for key in redis server """
+    # """ looking for key in redis server """
     # json_results = r.get(key)
+
     json_results = None
     """ cache miss logic """
     if not json_results:
@@ -177,10 +177,10 @@ def get_stream():
         # setting value in redis
         # r.set(memcache_key, json_results)
     end_time = time.time()
-    time_take = end_time - start_time
+    # time_take = end_time - start_time
     # logging.info("time take: %s for url: %s", time_take, request.url)
-    print "time take: ", time_take  #, "for url: ", request.url
-    return json_results
+    # print "time take: ", time_take  #, "for url: ", request.url
+    return json_results, 200, {'Content-Type': 'application/json'}
 
 
 """==================================================================================================================
@@ -230,7 +230,7 @@ def get_profile():
         status = False
         final = {'result': {'status': status, 'msg': msg, 'data': None}}
         json_results = json.dumps(final, default=json_util.default)
-        return json_results
+        return json_results, 200, {'Content-Type': 'application/json'}
         # abort(404)
 
     if result_qs and result_qs['_id']:
@@ -257,7 +257,7 @@ def get_profile():
     end_time = time.time()
     time_take = end_time - start_time
     print "time take: ", time_take, "for url: ", request.url
-    return json_results
+    return json_results, 200, {'Content-Type': 'application/json'}
 
 
 """==================================================================================================================
@@ -301,7 +301,7 @@ def edit_user():
     result = {'status': 'true', 'msg': 'successfully changed the details'}
     print "done"
     json_results = json.dumps(result, default=json_util.default)
-    return json_results
+    return json_results, 200, {'Content-Type': 'application/json'}
 
 
 """==================================================================================================================
@@ -360,7 +360,7 @@ def get_company():
     else:
         result1 = {'result': {'status': False, 'msg': 'list of companies', 'Total': None, 'data': None}}
         json_results = json.dumps(result1, default=json_util.default)
-        return json_results
+        return json_results, 200, {'Content-Type': 'application/json'}
 
     for each in result_crx:
         data[count] = {'Company': each}
@@ -377,7 +377,7 @@ def get_company():
     print "api finished working with time(secs) json: ", (end_time - start_time)
     # print "api finished working with time(secs): ujson", (end_time - end_time1)
 
-    return json_results
+    return json_results, 200, {'Content-Type': 'application/json'}
 
 
 """==================================================================================================================
@@ -439,7 +439,7 @@ def get_fans():
     logging.debug("api finished working with time(secs): json %s", (end_time - start_time))
     # print "api finished working with time(secs): json", (end_time - start_time)
 
-    return json_results
+    return json_results, 200, {'Content-Type': 'application/json'}
 
 
 """==================================================================================================================
@@ -458,9 +458,25 @@ def get_groupstream():
     admindetails = request.args.get("admindetails")
     memberdetails = request.args.get("memberdetails")
 
-    page = request.args.get("page")
-    limit = request.args.get("limit")
+    page = int(request.args.get("page", 1)) - 1
+    limit = int(request.args.get("limit"))
     apikey = request.args.get("apikey")
+
+    # from flask_restful import reqparse
+    # parser = reqparse.RequestParser()
+    # parser.add_argument(u'apikey', type=unicode, action='append')
+    #
+    # args = parser.parse_args()
+
+    skip = page * limit
+    # db.groups.find( {"members.uid":"53863567f1989d196402b2db",
+    # "members":{
+    # "$elemMatch":{
+    # "uid":"53863567f1989d196402b2db","role":{"$in":["fan","admin"]}}},
+    # "scope":{"$in":["public","open"]}}, [] ).
+    # sort( {"created":-1} ).
+    # limit( "15" ).
+    # skip( 0 )
 
     crx_groupList = db.groups.find({"members.uid": member_id,
                                     "members": {"$elemMatch":
@@ -473,59 +489,37 @@ def get_groupstream():
                                                         "public",
                                                         # "private"
                                                         ]},
-                                    })
-    # crx_groupList = db.groups.find({"$or": [
-    #                                         {"members.uid": member_id, "scope": {"$in": ["open", "public", "private"]}},
-    #                                         # {"scope": {"$in": ["open", "public"]}}
-    #                                        ]
-    #                                })
+                                    }).sort("created", -1).limit(limit).skip(skip)
     groupList = {}
     count = 0
     for group in crx_groupList:
-        # group["_id"] = str(group["_id"])
 
-        # members = db.users.find( {"_id":{"$in":[group["members"]] }})
-        members = db.users.find({"_id": {"$in": [ObjectId(x["uid"]) for x in group["members"]]}}, ["username","fname","lname","picture","email"])
-        member_dict = {x['_id']: x for x in members}
+        group["_id"] = str(group["_id"])
+        group['membercount'] += 1
+        members = db.users.find({"_id": {"$in": [ObjectId(x["uid"]) for x in group["members"]]}}, ["username", "fname", "lname", "picture", "email"])
+        # import ipdb
+        # ipdb.set_trace()
+        member_dict = {str(x['_id']): x for x in members}
         for member in group["members"]:
-            member["User"] = member_dict[ObjectId(member["uid"])]
-            # import ipdb
-            # ipdb.set_trace()
+            member["User"] = member_dict.get(str(member["uid"]))
+            if member.get("User"):
+                member['User']['_id'] = str(member['User']['_id'])
 
-        # group["members"] = members_dict
         groupList[count] = {"Group": group}
         count += 1
 
-
-        # for member in group["members"]:
-        #     user = {}
-        #     member_data = db.users.find_one({"_id": ObjectId(member['uid'])}, {"_id", "email", "picture", "username", "fname", "lname"})
-        #     # print member_data
-        #
-        #     # if not member_data:
-        #     #     none_count += 1
-        #     #     continue
-        #         # import ipdb
-        #         # ipdb.set_trace()
-        #
-        #     user["_id"] = str(member_data.get("_id"))
-        #     user["email"] = member_data.get("email", None)
-        #     user["picture"] = member_data.get("picture", None)
-        #     user["username"] = member_data.get("username", None)
-        #     user["fname"] = member_data.get("fname", None)
-        #     user["lname"] = member_data.get("lname", None)
-        #
-        #     member["User"] = user
-        #     if group["uid"] == member["uid"]:
-        #         group["createdby"] = {"User": member}
-
-
+        # import ipdb
+        # ipdb.set_trace()
     result = {"status": True, "msg": "list of groups", "data": groupList, "Total": crx_groupList.count()}
     format_result = {"result": result}
+    json_results = json.dumps(format_result, default=json_util.default)
+
+
+    # print args
+
     # import ipdb
     # ipdb.set_trace()
-    json_results = json.dumps(format_result, default=json_util.default)
-    return json_results
+    return json_results, 200, {'Content-Type': 'application/json'}
 
 
 """==================================================================================================================
@@ -543,26 +537,26 @@ def getFollowers():
     page = int(request.args.get("page", 1))
     limit = int(request.args.get("limit", 8))
     apikey = request.args.get("apikey")
-
+    skip = limit * page
     user_id_dict = db.users.find_one({"username": usernname}, {"_id": 1})
     user_id = user_id_dict["_id"]
+    # db.users.find( {"_id":ObjectId ("53863567f1989d196402b2db"),"companiesmember.status":"current"}, ["companiesmember.$"] ).sort( [] ).limit( 0 ).skip( 0 )
+    # db.companies.find( {"_id":ObjectId ("5386f7d8bbe855db0e8b45d8")}, ["_id","logo","name","urlname","description"] ).sort( [] ).limit( 0 ).skip( 0 )
+    # db.groups.find( {"members.uid":"53863567f1989d196402b2db"}, ["_id","group","isDisplay","members.$"] ).sort( {"created":-1} ).limit( 0 ).skip( 0 )
+
     crx_follower = db.users.find({"follow.uid": str(user_id)}, ["username", "fname", "lname", "picture", "followers",
-                                                                "companiesfan", "status"]).limit(limit)
-    # import ipdb
-    # ipdb.set_trace()
+                                                                "companiesfan", "status"]).limit(limit).skip(skip)
 
     user_count = 0
     data = {}
     for user in crx_follower:
         data[user_count] = {"User": user}
-        user_count +=1
-        # import ipdb
-        # ipdb.set_trace()
+        user_count += 1
 
     result = {"status": True, "msg": "list of followers", "data": data, "Total": crx_follower.count()}
     format_result = {"result": result}
     json_results = json.dumps(format_result, default=json_util.default)
-    return json_results
+    return json_results, 200, {'Content-Type': 'application/json'}
 
 
 """==================================================================================================================
@@ -579,8 +573,10 @@ def get_followingusercompany():
     usernname = request.args.get("username")
     _id = request.args.get("id")
 
-    page = int(request.args.get("page", 1))
-    limit = int(request.args.get("limit", 8))
+    page = int(request.args.get("page", 0))
+    limit = request.args.get("limit", None)
+    if limit:
+        limit = int(limit)
     apikey = request.args.get("apikey")
 
     # import ipdb
@@ -592,7 +588,7 @@ def get_followingusercompany():
     result = {"status": True, "msg": "list of following", "data": query_js}
     format_result = {"result": result}
     json_results = json.dumps(format_result, default=json_util.default)
-    return json_results
+    return json_results, 200, {'Content-Type': 'application/json'}
 
 
 """==================================================================================================================
@@ -613,4 +609,9 @@ if __name__ == '__main__':
     # app.run(debug=True, host='127.0.0.1', port=5500)
     # app.run(host='127.0.0.1', port=5500)
     # app.run(debug=True)
-    app.run()
+
+    app.run(
+        host="192.168.4.242",
+        port=int("5000"),
+        debug=True
+    )
