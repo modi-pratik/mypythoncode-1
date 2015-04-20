@@ -7,7 +7,9 @@ from flask import request, abort, Flask, jsonify, url_for
 from functools import wraps
 import time
 from flask.ext.pymongo import PyMongo
-
+import os
+from flask import Flask, request, redirect, url_for
+from werkzeug import secure_filename
 # import ujson
 # import memcache
 # import redis
@@ -16,7 +18,12 @@ from flask.ext.pymongo import PyMongo
 # from logging.handlers import RotatingFileHandler
 
 
+UPLOAD_FOLDER = '/path/to/the/uploads'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 # app.config['DEBUG'] = True
 # app.debug = True
@@ -36,7 +43,9 @@ def require_appkey(view_function):
     @wraps(view_function)
     # the new, post-decoration function. Note *args and **kwargs here.
     def decorated_function(*args, **kwargs):
-        if request.args.get('apikey') and str(request.args.get('apikey')) in ['api2014arcgate', 'api2014mobilearcgate']:
+        # import ipdb
+        # ipdb.set_trace()
+        if request.values['apikey'] and str(request.values['apikey']) in ['api2014arcgate', 'api2014mobilearcgate']:
             return view_function(*args, **kwargs)
         else:
             final = {'result': {'status': False, 'msg': "Invalid apikey", 'data': None}}
@@ -589,6 +598,232 @@ def get_followingusercompany():
     format_result = {"result": result}
     json_results = json.dumps(format_result, default=json_util.default)
     return json_results, 200, {'Content-Type': 'application/json'}
+
+
+"""==================================================================================================================
+    Api for add group ( post call)
+   ==================================================================================================================
+"""
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+import base64
+# def decode_base64(data):
+#     """Decode base64, padding being optional.
+#
+#     :param data: Base64 data as an ASCII byte string
+#     :returns: The decoded byte string.
+#
+#     """
+#     missing_padding = 4 - len(data) % 4
+#     if missing_padding:
+#         data += b'='* missing_padding
+#     return base64.b64decode(data)
+
+
+@app.route('/api/group/add.json', methods=['POST'])
+@require_appkey
+def add_group():
+    """ get followers for users (refactoring must done)"""
+
+    db = mongo.db
+
+    scope = request.args.get("scope")
+    group = request.args.get("group", None)
+    groupurl = request.args.get("groupurl", None)
+    token = request.args.get("token")
+    uid = request.args.get("uid", None)
+    cid = request.args.get("cid", None)
+    apikey = request.args.get("apikey")
+    status = "active"
+
+    isDisplay = True
+
+    result = {"status": True, "msg": "list of following", "data": None}
+
+    import ipdb
+    ipdb.set_trace()
+
+    if not status:
+        result['msg'] = {"status": "You must select a status."}
+        format_result = {"result": result}
+        json_results = json.dumps(format_result, default=json_util.default)
+        return json_results, 200, {'Content-Type': 'application/json'}
+
+    if not scope:
+        result['msg'] = {"scope": "You must select a scope."}
+        format_result = {"result": result}
+        json_results = json.dumps(format_result, default=json_util.default)
+        return json_results, 200, {'Content-Type': 'application/json'}
+
+    if not group or groupurl:
+        result['msg'] = {
+                         "group": ["You must enter a group name."],
+                         "groupurl": ["You must enter a groupurl."]
+                        }
+        format_result = {"result": result}
+        json_results = json.dumps(format_result, default=json_util.default)
+        return json_results, 200, {'Content-Type': 'application/json'}
+
+    if not cid:
+        result['msg'] = {"cid": ["You must enter a cid"]}
+        format_result = {"result": result}
+        json_results = json.dumps(format_result, default=json_util.default)
+        return json_results, 200, {'Content-Type': 'application/json'}
+
+    if not uid:
+        result['msg'] = {"uid": ["You must enter a uid"]}
+        format_result = {"result": result}
+        json_results = json.dumps(format_result, default=json_util.default)
+        return json_results, 200, {'Content-Type': 'application/json'}
+
+    groupurl_found = db.companies.find_one({"urlname": groupurl}) or\
+                     db.groups.find_one({"groupurl": groupurl}) or\
+                     db.users.find_one({"username": groupurl})
+
+    import ipdb
+    ipdb.set_trace()
+    if groupurl_found:
+        result['msg'] = {"groupurl": "This groupurl already taken."}
+        format_result = {"result": result}
+        json_results = json.dumps(format_result, default=json_util.default)
+        return json_results, 200, {'Content-Type': 'application/json'}
+
+    notsupported = ('about', 'undefined', 'login', 'contact', 'faq', 'terms', 'privacy', 'invite', 'logout')
+    shouldnotstartwith = "emp-"
+
+    if groupurl in notsupported or groupurl.startswith(shouldnotstartwith):
+        result['msg'] = {"groupurl": "Group URL already exists."}
+        format_result = {"result": result}
+        json_results = json.dumps(format_result, default=json_util.default)
+        return json_results, 200, {'Content-Type': 'application/json'}
+
+    import ipdb
+    ipdb.set_trace()
+
+    coverphoto = 'files/coverphoto/group/groupdefault_1.jpg'
+
+    if request.values['image'] and request.values['filedata']:
+
+        from utils import validatephoto
+        validatefile = validatephoto(request)
+
+        if validatefile['error']:
+            gid = db.groups.find_one({'groupurl': groupurl}, {'_id': 1})
+            if gid:
+                str_gid = str(gid['_id'])
+                img_path_name = 'files/groupimage/' + str_gid + '.jpg'
+                from utils import uploadImage
+                file_like = validatefile['file_like']
+                uploadImageStatus = uploadImage(file_like)
+
+
+    # '''create function here for validatephoto confirm in which parameter the base64 string is coming'''
+    # import cStringIO
+    # import PIL.Image
+    # from wand.image import Image
+    #
+    # img_binarydata = request.values['image']
+    # photo_type = request.values['type']
+    # file_like = cStringIO.StringIO(img_binarydata)
+    # img = Image(file=file_like)
+    # img_type = img.mimetype
+    # img_file_size = file_like.tell()
+    # image_info = img.size
+    #
+    # # encoded_image = base64.b64encode(img_binarydata)
+    #
+    # # UUU = base64.b64decode(img_base64data)
+    # # file_size = file_like.tell()
+    # # # img = PIL.Image.open(file_like)
+    # # img = Image(file=file_like)
+    # # image_type = img.mimetype
+    #
+    # format_set = ('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png', 'image/jpg')
+    # if img_type in format_set:
+    #     width, height = image_info
+    #     if photo_type == "cover":
+    #         if width < 1500 or height < 400:
+    #             result['msg'] = {"image": ['0 :The image uploaded is too small. Minimum size'
+    #                                        ' required is width of 1500 and height of 400.']}
+    #     else:
+    #         if width < 200 or height < 200:
+    #             result['msg'] = {"image": ["0 : The image uploaded is too small. Minimum size required is 200 x 200. "]}
+    #
+    #         elif img_file_size > (2 * 1024 * 1024):
+    #             result['msg'] = {"image": ['0 :Image size should be 2MB or less.']}
+    #
+    # else:
+    #     result['msg'] = {"image": ['0 : Only jpg, jpeg, png, gif formats are allowed']}
+
+
+    ''' send file to s3 bucket '''
+    import boto
+    from boto.s3.key import Key
+    from boto.s3.connection import S3Connection
+
+    conn = S3Connection('AKIAIQMFRF3T3OGGT63Q', 'pfNgxSW+ZVTNghluSAT24nMaZuFtmOli+Cjzinej')
+
+    bucket = conn.get_bucket('workmob-dev')
+
+    key_image = Key(bucket)
+    try:
+        key_image.send_file(file_like)
+    except:
+        print "error in uploading file to server"
+
+
+
+
+
+
+
+    img_file = request.files['file']
+
+    if file and allowed_file(img_file.filename):
+            filename = secure_filename(img_file.filename)
+            img_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    else:
+        result['msg'] = {"groupurl": "Group URL already exists."}
+        format_result = {"result": result}
+        json_results = json.dumps(format_result, default=json_util.default)
+        return json_results, 200, {'Content-Type': 'application/json'}
+    query_js = None
+
+    result = {"status": True, "msg": "list of following", "data": query_js}
+    format_result = {"result": result}
+    json_results = json.dumps(format_result, default=json_util.default)
+    return json_results, 200, {'Content-Type': 'application/json'}
+
+
+"""==================================================================================================================
+    Api for edit group ( post call)
+   ==================================================================================================================
+"""
+@app.route('/api/group/edit.json', methods=['POST'])
+@require_appkey
+def edit_group():
+    """ get followers for users """
+
+    db = mongo.db
+
+    scope = request.args.get("scope")
+    group = request.args.get("group")
+    groupurl = request.args.get("groupurl")
+    token = request.args.get("token")
+    uid = request.args.get("uid")
+    cid = request.args.get("cid")
+    apikey = request.args.get("apikey")
+
+    query_js = None
+    result = {"status": True, "msg": "list of following", "data": query_js}
+    format_result = {"result": result}
+    json_results = json.dumps(format_result, default=json_util.default)
+    return json_results, 200, {'Content-Type': 'application/json'}
+
 
 
 """==================================================================================================================
