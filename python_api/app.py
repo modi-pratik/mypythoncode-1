@@ -811,11 +811,15 @@ def edit_group():
                 #     img_type = 'jpg'
 
                 img_path_name = GROUP_IMAGES + group_id + '.' + ext_type
-
+                local_img_path_name = APP_PATH + '/' + img_path_name
                 from utils import uploadImage
                 file_like = validatefile['file_like']
-                import ipdb
-                ipdb.set_trace()
+                # import ipdb
+                # ipdb.set_trace()
+                fp = open(local_img_path_name, 'wb')
+                file_like.seek(0)
+                fp.write(file_like.read())
+                fp.close()
                 uploadImageStatus = uploadImage(file_like, img_path_name, img_type)
                 if uploadImageStatus:
                     pass
