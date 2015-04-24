@@ -45,7 +45,7 @@ def require_appkey(view_function):
     def decorated_function(*args, **kwargs):
         # import ipdb
         # ipdb.set_trace()
-        if request.values['apikey'] and str(request.values['apikey']) in ['api2014arcgate', 'api2014mobilearcgate']:
+        if request.values.get('apikey') and str(request.values.get('apikey')) in ['api2014arcgate', 'api2014mobilearcgate']:
             return view_function(*args, **kwargs)
         else:
             final = {'result': {'status': False, 'msg': "Invalid apikey", 'data': None}}
@@ -499,35 +499,27 @@ def get_groupstream():
                                                         # "private"
                                                         ]},
                                     }).sort("created", -1).limit(limit).skip(skip)
-    groupList = {}
-    count = 0
+    groupList = []
+
     for group in crx_groupList:
 
         group["_id"] = str(group["_id"])
         group['membercount'] += 1
         members = db.users.find({"_id": {"$in": [ObjectId(x["uid"]) for x in group["members"]]}}, ["username", "fname", "lname", "picture", "email"])
-        # import ipdb
-        # ipdb.set_trace()
         member_dict = {str(x['_id']): x for x in members}
         for member in group["members"]:
             member["User"] = member_dict.get(str(member["uid"]))
             if member.get("User"):
                 member['User']['_id'] = str(member['User']['_id'])
 
-        groupList[count] = {"Group": group}
-        count += 1
+        groupList.append({"Group": group})
 
-        # import ipdb
-        # ipdb.set_trace()
     result = {"status": True, "msg": "list of groups", "data": groupList, "Total": crx_groupList.count()}
     format_result = {"result": result}
     json_results = json.dumps(format_result, default=json_util.default)
 
-
     # print args
 
-    # import ipdb
-    # ipdb.set_trace()
     return json_results, 200, {'Content-Type': 'application/json'}
 
 
@@ -543,7 +535,7 @@ def getFollowers():
     db = mongo.db
 
     usernname = request.args.get("username")
-    page = int(request.args.get("page", 1))
+    page = int(request.args.get("page", 0))
     limit = int(request.args.get("limit", 8))
     apikey = request.args.get("apikey")
     skip = limit * page
@@ -610,7 +602,7 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-import base64
+# import base64
 # def decode_base64(data):
 #     """Decode base64, padding being optional.
 #
@@ -631,21 +623,18 @@ def add_group():
 
     db = mongo.db
 
-    scope = request.args.get("scope")
-    group = request.args.get("group", None)
-    groupurl = request.args.get("groupurl", None)
-    token = request.args.get("token")
-    uid = request.args.get("uid", None)
-    cid = request.args.get("cid", None)
-    apikey = request.args.get("apikey")
-    status = "active"
+    scope = request.values.get("scope")
+    group = request.values.get("group")
+    groupurl = request.values.get("groupurl")
+    token = request.values.get("token")
+    uid = request.values.get("uid")
+    cid = request.values.get("cid")
+    apikey = request.values.get("apikey")
 
+    status = "active"
     isDisplay = True
 
     result = {"status": True, "msg": "list of following", "data": None}
-
-    import ipdb
-    ipdb.set_trace()
 
     if not status:
         result['msg'] = {"status": "You must select a status."}
@@ -659,7 +648,8 @@ def add_group():
         json_results = json.dumps(format_result, default=json_util.default)
         return json_results, 200, {'Content-Type': 'application/json'}
 
-    if not group or groupurl:
+
+    if not (group or groupurl):
         result['msg'] = {
                          "group": ["You must enter a group name."],
                          "groupurl": ["You must enter a groupurl."]
@@ -680,18 +670,21 @@ def add_group():
         json_results = json.dumps(format_result, default=json_util.default)
         return json_results, 200, {'Content-Type': 'application/json'}
 
-    groupurl_found = db.companies.find_one({"urlname": groupurl}) or\
-                     db.groups.find_one({"groupurl": groupurl}) or\
-                     db.users.find_one({"username": groupurl})
 
-    import ipdb
-    ipdb.set_trace()
+    # import ipdb
+    # ipdb.set_trace()
+    groupurl_found = bool(db.companies.find_one({"urlname": groupurl}) or\
+                     db.groups.find_one({"groupurl": groupurl}) or\
+                     db.users.find_one({"username": groupurl}))
+
     if groupurl_found:
         result['msg'] = {"groupurl": "This groupurl already taken."}
         format_result = {"result": result}
         json_results = json.dumps(format_result, default=json_util.default)
         return json_results, 200, {'Content-Type': 'application/json'}
 
+    # import ipdb
+    # ipdb.set_trace()
     notsupported = ('about', 'undefined', 'login', 'contact', 'faq', 'terms', 'privacy', 'invite', 'logout')
     shouldnotstartwith = "emp-"
 
@@ -701,102 +694,80 @@ def add_group():
         json_results = json.dumps(format_result, default=json_util.default)
         return json_results, 200, {'Content-Type': 'application/json'}
 
-    import ipdb
-    ipdb.set_trace()
-
+    # import ipdb
+    # ipdb.set_trace()
     coverphoto = 'files/coverphoto/group/groupdefault_1.jpg'
 
-    if request.values['image'] and request.values['filedata']:
-
+    if request.values.get('image') and request.values.get('filedata'):
         from utils import validatephoto
+        # validatefile = {'error': error, 'img_type': img_type, 'file_like': file_like}
         validatefile = validatephoto(request)
 
-        if validatefile['error']:
+        if not validatefile['error']:
             gid = db.groups.find_one({'groupurl': groupurl}, {'_id': 1})
             if gid:
+                from config_data import GROUP_IMAGES, APP_PATH
                 str_gid = str(gid['_id'])
-                img_path_name = 'files/groupimage/' + str_gid + '.jpg'
+                img_type = validatefile['img_type']
+                img_path_name = APP_PATH + GROUP_IMAGES + str_gid + '.' + img_type
+
                 from utils import uploadImage
                 file_like = validatefile['file_like']
                 uploadImageStatus = uploadImage(file_like)
-
-
-    # '''create function here for validatephoto confirm in which parameter the base64 string is coming'''
-    # import cStringIO
-    # import PIL.Image
-    # from wand.image import Image
-    #
-    # img_binarydata = request.values['image']
-    # photo_type = request.values['type']
-    # file_like = cStringIO.StringIO(img_binarydata)
-    # img = Image(file=file_like)
-    # img_type = img.mimetype
-    # img_file_size = file_like.tell()
-    # image_info = img.size
-    #
-    # # encoded_image = base64.b64encode(img_binarydata)
-    #
-    # # UUU = base64.b64decode(img_base64data)
-    # # file_size = file_like.tell()
-    # # # img = PIL.Image.open(file_like)
-    # # img = Image(file=file_like)
-    # # image_type = img.mimetype
-    #
-    # format_set = ('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png', 'image/jpg')
-    # if img_type in format_set:
-    #     width, height = image_info
-    #     if photo_type == "cover":
-    #         if width < 1500 or height < 400:
-    #             result['msg'] = {"image": ['0 :The image uploaded is too small. Minimum size'
-    #                                        ' required is width of 1500 and height of 400.']}
-    #     else:
-    #         if width < 200 or height < 200:
-    #             result['msg'] = {"image": ["0 : The image uploaded is too small. Minimum size required is 200 x 200. "]}
-    #
-    #         elif img_file_size > (2 * 1024 * 1024):
-    #             result['msg'] = {"image": ['0 :Image size should be 2MB or less.']}
-    #
-    # else:
-    #     result['msg'] = {"image": ['0 : Only jpg, jpeg, png, gif formats are allowed']}
-
-
-    ''' send file to s3 bucket '''
-    import boto
-    from boto.s3.key import Key
-    from boto.s3.connection import S3Connection
-
-    conn = S3Connection('AKIAIQMFRF3T3OGGT63Q', 'pfNgxSW+ZVTNghluSAT24nMaZuFtmOli+Cjzinej')
-
-    bucket = conn.get_bucket('workmob-dev')
-
-    key_image = Key(bucket)
-    try:
-        key_image.send_file(file_like)
-    except:
-        print "error in uploading file to server"
-
-
-
-
-
-
-
-    img_file = request.files['file']
-
-    if file and allowed_file(img_file.filename):
-            filename = secure_filename(img_file.filename)
-            img_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     else:
-        result['msg'] = {"groupurl": "Group URL already exists."}
-        format_result = {"result": result}
-        json_results = json.dumps(format_result, default=json_util.default)
-        return json_results, 200, {'Content-Type': 'application/json'}
-    query_js = None
+        groupsort = group.lower()
+        post_data = {'scope': scope, 'group': group, 'groupurl': groupurl, 'uid': uid, 'cid': cid,
+                         'status': status, 'isDisplay': isDisplay, 'coverphoto': coverphoto, 'groupsort': groupsort,
+                         'token': token, 'apikey': apikey}
+        try:
+            group_insert = db.groups.insert(post_data)
+            group_id = str(group_insert)
+            post_data['group_id'] = group_id
+            result = {"status": True, "msg": "Group Added Successfully", "data": post_data}
+            format_result = {"result": result}
+            json_results = json.dumps(format_result, default=json_util.default)
+            return json_results, 200, {'Content-Type': 'application/json'}
 
-    result = {"status": True, "msg": "list of following", "data": query_js}
-    format_result = {"result": result}
-    json_results = json.dumps(format_result, default=json_util.default)
-    return json_results, 200, {'Content-Type': 'application/json'}
+        except:
+            logging.error("error in inserting into the db for add group api call")
+            result = {"status": False, "msg": "error in inserting into the db for add group api call", "data": post_data}
+            format_result = {"result": result}
+            json_results = json.dumps(format_result, default=json_util.default)
+            return json_results, 200, {'Content-Type': 'application/json'}
+
+
+
+    # ''' send file to s3 bucket '''
+    # import boto
+    # from boto.s3.key import Key
+    # from boto.s3.connection import S3Connection
+    #
+    # conn = S3Connection('AKIAIQMFRF3T3OGGT63Q', 'pfNgxSW+ZVTNghluSAT24nMaZuFtmOli+Cjzinej')
+    #
+    # bucket = conn.get_bucket('workmob-dev')
+    #
+    # key_image = Key(bucket)
+    # try:
+    #     key_image.send_file(file_like)
+    # except:
+    #     print "error in uploading file to server"
+    #
+    # img_file = request.files['file']
+    #
+    # if file and allowed_file(img_file.filename):
+    #         filename = secure_filename(img_file.filename)
+    #         img_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    # else:
+    #     result['msg'] = {"groupurl": "Group URL already exists."}
+    #     format_result = {"result": result}
+    #     json_results = json.dumps(format_result, default=json_util.default)
+    #     return json_results, 200, {'Content-Type': 'application/json'}
+    # query_js = None
+    #
+    # result = {"status": True, "msg": "list of following", "data": query_js}
+    # format_result = {"result": result}
+    # json_results = json.dumps(format_result, default=json_util.default)
+    # return json_results, 200, {'Content-Type': 'application/json'}
 
 
 """==================================================================================================================
@@ -807,16 +778,47 @@ def add_group():
 @require_appkey
 def edit_group():
     """ get followers for users """
-
+    # import ipdb
+    # ipdb.set_trace()
     db = mongo.db
 
-    scope = request.args.get("scope")
-    group = request.args.get("group")
-    groupurl = request.args.get("groupurl")
-    token = request.args.get("token")
-    uid = request.args.get("uid")
-    cid = request.args.get("cid")
-    apikey = request.args.get("apikey")
+    apikey = request.values.get("apikey")
+    image_data_binary = request.values.get('image')
+    category = request.values.get("category")
+    description = request.values.get("description")
+    token = request.values.get("token")
+    _id = request.values.get("_id")
+    uid = request.values.get("uid")
+
+    group = db.groups.find_one({'_id': ObjectId(_id)})
+    group_id = _id
+    category_dict = db.categories.find_one({'_id': ObjectId(category)}, {'category': 1})
+    # category_name = category_dict.get('category')
+
+    if request.values.get('image'): #and request.values.get('filedata'):
+        from utils import validatephoto
+        # validatefile = {'error': error, 'img_type': img_type, 'file_like': file_like}
+        validatefile = validatephoto(request)
+
+        if not validatefile['error']:
+            # gid = db.groups.find_one({'groupurl': groupurl}, {'_id': 1})
+            if group_id:
+                from config_data import GROUP_IMAGES, APP_PATH
+                # str_gid = str(gid['_id'])
+                img_type = validatefile['img_type']
+                ext_type = validatefile['img_type'].split('/')[-1]
+                # if img_type == 'jpeg':
+                #     img_type = 'jpg'
+
+                img_path_name = GROUP_IMAGES + group_id + '.' + ext_type
+
+                from utils import uploadImage
+                file_like = validatefile['file_like']
+                import ipdb
+                ipdb.set_trace()
+                uploadImageStatus = uploadImage(file_like, img_path_name, img_type)
+                if uploadImageStatus:
+                    pass
 
     query_js = None
     result = {"status": True, "msg": "list of following", "data": query_js}
@@ -824,6 +826,20 @@ def edit_group():
     json_results = json.dumps(format_result, default=json_util.default)
     return json_results, 200, {'Content-Type': 'application/json'}
 
+
+@app.route('/api/users/login.json', methods=['POST'])
+#@require_appkey
+def user_login():
+    """ user login only for testing """
+    import ipdb
+    ipdb.set_trace()
+    db = mongo.db
+    #print "getting here"
+    test = request.values['testing']
+    result = {"status": True, "msg": "login post call", "data": test}
+    format_result = {"result": result}
+    json_results = json.dumps(format_result, default=json_util.default)
+    return json_results, 200, {'Content-Type': 'application/json'}
 
 
 """==================================================================================================================
